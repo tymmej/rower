@@ -11,7 +11,7 @@
 <?php
 
 //read json
-$file = file_get_contents('gpx.json');
+$file=file_get_contents('gpx.json');
 $json=json_decode($file, true);
 
 $i=0;
@@ -44,11 +44,69 @@ array_multisort($trips, SORT_DESC, $dates);
 
 $table=array();
 
+$stats=array();
+
 foreach($trips as $trip) {
+$year=substr($trip['name'], 0, 4);
+$month=substr($trip['name'], 4, 2);
+$stats[$year][$month]['distance']+=$trip['dist'];
+$stats[$year][$month]['time']+=$trip['seconds'];
+$stats[$year]['distance']+=$trip['dist'];
+$stats[$year]['time']+=$trip['seconds'];
 $table[$j].="<tr>\n\t<th colspan=\"4\">" . $trip['desc'] . " " . $trip['date'] . "</th>\n</tr>\n";
 $table[$j].="<tr>\n\t<td>". $trip['dist'] . "km" ."</td>\n\t<td>" . $trip['time_readable'] . "</td>\n\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n</tr>\n";
 $j=++$j%3;
 }
+
+$j=0;
+echo "<div id=\"stats\">\n<table>\n<tr>\n<td></td>\n";
+foreach($stats as $year => $stat) {
+	echo "<th colspan=\"2\">$year</th>";
+	$years[$j]=$year;
+	$j++;
+}
+echo "</tr>\n";
+
+$months=array('', 'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień');
+
+echo "<tr>\n<td>Total</td>";
+
+for($k=0; $k<$j; $k++) {
+	$hours=(int)($stats[$years[$k]]['time']/3600);
+	$minutes=(int)(($stats[$years[$k]]['time']-$hours*3600)/60);
+	$seconds2=(int)($stats[$years[$k]]['time']-$hours*3600-$minutes*60);
+	$time_readable=$hours. "h ". $minutes . "m " . $seconds2 . "s";
+	if($time_readable=="0h 0m 0s") $time_readable="";
+	echo "<td>" . $stats[$years[$k]]['distance'];
+	if($stats[$years[$k]]['distance']!="") echo " km";
+	echo "</td><td>" . $time_readable . "</td>";
+}
+echo "</tr>\n";
+
+$temp=array();
+
+for($i=1; $i<=12; $i++) {
+	$empty=1;
+	$temp[$i]="";
+	$temp[$i].="<tr><td>" . $months[$i] . "</td>";
+	$j=sprintf("%02d",$i);
+	for($k=0; $k<$j; $k++) {
+		if($stats[$years[$k]][$j]['distance']!="") $empty=0;
+		$hours=(int)($stats[$years[$k]][$j]['time']/3600);
+		$minutes=(int)(($stats[$years[$k]][$j]['time']-$hours*3600)/60);
+		$seconds2=(int)($stats[$years[$k]][$j]['time']-$hours*3600-$minutes*60);
+		$time_readable=$hours. "h ". $minutes . "m " . $seconds2 . "s";
+		if($time_readable=="0h 0m 0s") $time_readable="";
+		$temp[$i].="<td>" . $stats[$years[$k]][$j]['distance'];
+		if($stats[$years[$k]][$j]['distance']!="") $temp[$i].=" km";
+		$temp[$i].="</td><td>" . $time_readable . "</td>";
+	}
+	$temp[$i].="</tr>\n";
+	if($empty==1) $temp[$i]="";
+	echo $temp[$i];
+}
+
+echo "</table></div>";
 
 echo "<div id=\"col1\">\n<table>\n";
 echo $table[0];
