@@ -41,6 +41,10 @@ td {
 #container {
 }
 
+#stats {
+	width: 1248px;
+}
+
 #col1 {
 	float: left;
 	width: 410px;
@@ -71,6 +75,8 @@ table th {
 	padding:2px;
 	border-top:1px solid #fafafa;
 	border-bottom:1px solid #e0e0e0;
+	border-right:1px solid #999;
+	border-left:1px solid #999;
 
 	background: #ededed;
 }
