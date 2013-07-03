@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -53,7 +53,7 @@ $stats[$year][$month]['distance']+=$trip['dist'];
 $stats[$year][$month]['time']+=$trip['seconds'];
 $stats[$year]['distance']+=$trip['dist'];
 $stats[$year]['time']+=$trip['seconds'];
-$table[$j].="<tr>\n\t<th colspan=\"4\">" . $trip['desc'] . " " . $trip['date'] . "</th>\n</tr>\n";
+$table[$j].="<tr>\n\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . " " . $trip['date'] . "</a></th>\n</tr>\n";
 $table[$j].="<tr>\n\t<td>". $trip['dist'] . "km" ."</td>\n\t<td>" . $trip['time_readable'] . "</td>\n\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n</tr>\n";
 $j=++$j%3;
 }
