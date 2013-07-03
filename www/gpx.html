@@ -1,0 +1,75 @@
+<!--
+
+  Demo put together by Christophe Jacquet in February 2011.
+  < http://www.jacquet80.eu >
+
+  Use it and adapt it at your own will.
+
+-->
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Mapka Google</title>
+<style type="text/css">
+  html, body, #map_canvas { width: 100%; height: 100%; margin: 0; padding: 0 }
+</style>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript">
+
+  function initialize() {
+    var map = new google.maps.Map(document.getElementById("map_canvas"), {
+      mapTypeId: google.maps.MapTypeId.HYBRID
+    });
+
+    qs = document.location.search.split("+").join(" ");
+
+    var params = {}, tokens,
+        re = /[?&]?([^=]+)=([^&]*)/g;
+
+    while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])]
+            = decodeURIComponent(tokens[2]);
+    }
+
+    var url_file = "gpx/" + params.file + ".gpx";
+    document.title = params.file;
+    $.ajax({
+     type: "GET",
+     url: url_file,
+     dataType: "xml",
+     success: function(xml) {
+       var points = [];
+       var bounds = new google.maps.LatLngBounds ();
+       $(xml).find("trkpt").each(function() {
+         var lat = $(this).attr("lat");
+         var lon = $(this).attr("lon");
+         var p = new google.maps.LatLng(lat, lon);
+         points.push(p);
+         bounds.extend(p);
+       });
+
+       var poly = new google.maps.Polyline({
+         // use your own style here
+         path: points,
+         strokeColor: "#FF00AA",
+         strokeOpacity: .7,
+         strokeWeight: 4
+       });
+       
+       poly.setMap(map);
+       
+       // fit bounds to track
+       map.fitBounds(bounds);
+     }
+    });
+  }
+</script>
+</head>
+
+<body onload="initialize()">
+  <div id="map_canvas"></div>
+</body>
+</html>
+
