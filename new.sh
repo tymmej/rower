@@ -37,3 +37,4 @@ echo ",
 mv www/gpx.old.json www/gpx.json
 
 scp -P 23 www/gpx.json tymmej@tymejczyk.pl:/www/dane/tymmej/rower/
+scp -P 23 "$FILE" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/gpx/
