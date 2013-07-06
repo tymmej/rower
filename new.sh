@@ -4,6 +4,8 @@
 FILE="$1"
 DESC="$2"
 
+sed -i 's/<trk>/<trk><name>TrekBuddy<\/name>/g' "$FILE"
+
 #create screenshot
 viking ~/documents/gpx/viking "$FILE" &
 PID=$!
@@ -42,7 +44,9 @@ echo ",
 mv www/gpx.old.json www/gpx.json
 
 #transfer files
+FILE=`echo $FILE | sed -e 's/gpx/png/g'`
 scp -P 23 www/maps/"$FILE" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
+FILE=`echo "$FILE" | sed -e 's/png/gpx/g'`
 scp -P 23 www/maps/"$FILE_MINI" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
 scp -P 23 www/gpx.json tymmej@tymejczyk.pl:/www/dane/tymmej/rower/
 scp -P 23 "$FILE" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/gpx/

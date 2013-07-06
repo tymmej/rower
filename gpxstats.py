@@ -83,8 +83,8 @@ def outputTrackDetails(track, waypoints, units):
   distanceConverter = unitSpecifics['distanceConverter']
   distanceUnits = unitSpecifics['distanceUnits']
 
-  start = datetime.strptime(statistics['starttime'], "%Y-%m-%dT%H:%M:%SZ")
-  end = datetime.strptime(statistics['endtime'], "%Y-%m-%dT%H:%M:%SZ")
+  start = datetime.strptime(statistics['starttime'], "%Y-%m-%dT%H:%M:%S.%fZ")
+  end = datetime.strptime(statistics['endtime'], "%Y-%m-%dT%H:%M:%S.%fZ")
   diff = (end-start).total_seconds()
 
 #  print " total distance [%s]:\t%.2f" % (distanceUnits, distance * distanceConverter)

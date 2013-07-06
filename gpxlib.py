@@ -49,6 +49,8 @@ class Geopoint(object):
   # well as taking into account elevation change via the Pythagorean Theorem
   # http://en.wikipedia.org/wiki/Pythagorean_theorem
   def distance(self, point):
+    if self.latitude == point.latitude and self.longitude == point.longitude:
+      return 0
     averageDistance = (self.haversineDistance(point) +
                        self.sphericalLawOfCosinesDistance(point)) / 2
     return averageDistance
