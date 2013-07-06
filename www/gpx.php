@@ -29,8 +29,8 @@ foreach($json['trips'] as $trip) {
 	$trips[$i]['avg']=$avg=round($trips[$i]['dist']/$trips[$i]['seconds']*3600, 2);
 	$hours=(int)($trips[$i]['seconds']/3600);
 	$minutes=(int)(($trips[$i]['seconds']-$hours*3600)/60);
-	$seconds2=(int)($trips[$i]['seconds']-$hours*3600-$minutes*60);
-	$trips[$i]['time_readable']=$hours. "h ". $minutes . "m " . $seconds2 . "s";
+	$seconds=(int)($trips[$i]['seconds']-$hours*3600-$minutes*60);
+	$trips[$i]['time_readable']=$hours. "h ". $minutes . "m " . $seconds . "s";
 	$i++;
 }
 
@@ -42,7 +42,6 @@ array_multisort($trips, SORT_DESC, $dates);
 
 
 $table=array();
-
 $stats=array();
 
 foreach($trips as $trip) {
@@ -52,13 +51,13 @@ foreach($trips as $trip) {
 	$stats[$year][$month]['time']+=$trip['seconds'];
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
-	$table[$j].="<tr>\n\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n</tr>\n";
-	$table[$j].="<tr>\n\t<td>". $trip['dist'] . "km" ."</td>\n\t<td>" . $trip['time_readable'] . "</td>\n\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n</tr>\n";
+	$table[$j].="\t<tr>\n\t\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n\t</tr>\n";
+	$table[$j].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n\t</tr>\n";
 	$j=++$j%3;
 }
 
 $j=0;
-echo "<div id=\"stats\">\n<table>\n<tr>\n<td></td>\n";
+echo "<div id=\"stats\">\n<table>\n\t<tr><td></td>";
 foreach($stats as $year => $stat) {
 	echo "<th colspan=\"2\">$year</th>";
 	$years[$j]=$year;
@@ -68,7 +67,7 @@ echo "</tr>\n";
 
 $months=array('', 'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień');
 
-echo "</tr>\n<tr><td>Total</td>";
+echo "\t<tr><td>Total</td>";
 
 for($k=0; $k<$j; $k++) {
 	$hours=(int)($stats[$years[$k]]['time']/3600);
@@ -85,37 +84,33 @@ echo "</tr>\n";
 //create stats
 for($i=12; $i>=1; $i--) {
 	$empty=1;
-	$temp="";
-	$temp.="<tr><td>" . $months[$i] . "</td>";
+	$stat="";
+	$stat.="\t<tr><td>" . $months[$i] . "</td>";
 	$i_zero=sprintf("%02d",$i);
 	for($k=0; $k<$j; $k++) {
 		if($stats[$years[$k]][$i_zero]['distance']!="") $empty=0;
 		$hours=(int)($stats[$years[$k]][$i_zero]['time']/3600);
 		$minutes=(int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60);
-		$seconds2=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
-		$time_readable=$hours. "h ". $minutes . "m " . $seconds2 . "s";
+		$seconds=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
+		$time_readable=$hours. "h ". $minutes . "m " . $seconds . "s";
 		if($time_readable=="0h 0m 0s") $time_readable="";
-		$temp.="<td>" . $stats[$years[$k]][$i_zero]['distance'];
-		if($stats[$years[$k]][$i_zero]['distance']!="") $temp.=" km";
-		$temp.="</td><td>" . $time_readable . "</td>";
+		$stat.="<td>" . $stats[$years[$k]][$i_zero]['distance'];
+		if($stats[$years[$k]][$i_zero]['distance']!="") $stat.=" km";
+		$stat.="</td><td>" . $time_readable . "</td>";
 	}
-	$temp.="</tr>\n";
-	if($empty==1) $temp="";
-	echo $temp;
+	$stat.="</tr>\n";
+	if($empty==1) $stat="";
+	echo $stat;
 }
 
-echo "</table></div>";
+echo "</table>\n</div>\n\n";
 
 //print tables
-echo "<div id=\"col1\">\n<table>\n";
-echo $table[0];
-echo "</table></div>";
-echo "<div id=\"col2\">\n<table>\n";
-echo $table[1];
-echo "</table></div>";
-echo "<div id=\"col3\">\n<table>\n";
-echo $table[2];
-echo "</table></div>";
+for($i=0; $i<3; $i++) {
+	echo "<div id=\"col" . ($i+1) . "\">\n<table>\n";
+	echo $table[$i];
+	echo "</table>\n</div>";
+}
 
 ?>
 
