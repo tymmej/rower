@@ -4,7 +4,10 @@
 FILE="$1"
 DESC="$2"
 
-sed -i 's/<trk>/<trk><name>TrekBuddy<\/name>/g' "$FILE"
+NAME=`grep "<name>" 20130706.1.gpx | wc -l`
+if [ $NAME -eq 0 ]; then
+	sed -i 's/<trk>/<trk><name>TrekBuddy<\/name>/g' "$FILE"
+fi
 
 #create screenshot
 viking ~/documents/gpx/viking "$FILE" &
