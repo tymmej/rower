@@ -53,7 +53,7 @@ $stats[$year][$month]['distance']+=$trip['dist'];
 $stats[$year][$month]['time']+=$trip['seconds'];
 $stats[$year]['distance']+=$trip['dist'];
 $stats[$year]['time']+=$trip['seconds'];
-$table[$j].="<tr>\n\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . " " . $trip['date'] . "</a></th>\n</tr>\n";
+$table[$j].="<tr>\n\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n</tr>\n";
 $table[$j].="<tr>\n\t<td>". $trip['dist'] . "km" ."</td>\n\t<td>" . $trip['time_readable'] . "</td>\n\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n</tr>\n";
 $j=++$j%3;
 }
