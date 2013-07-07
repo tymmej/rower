@@ -4,7 +4,7 @@
 FILE="$1"
 DESC="$2"
 
-NAME=`grep "<name>" 20130706.1.gpx | wc -l`
+NAME=`grep "<name>" "$FILE" | wc -l`
 if [ $NAME -eq 0 ]; then
 	sed -i 's/<trk>/<trk><name>TrekBuddy<\/name>/g' "$FILE"
 fi
