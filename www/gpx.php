@@ -107,7 +107,7 @@ echo "</table>\n</div>\n\n";
 
 //print tables
 for($i=0; $i<3; $i++) {
-	echo "<div id=\"col" . ($i+1) . "\">\n<table>\n";
+	echo "<div id=\"col\">\n<table>\n";
 	echo $table[$i];
 	echo "</table>\n</div>";
 }

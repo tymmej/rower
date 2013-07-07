@@ -49,17 +49,7 @@ td {
 	width: 1248px;
 }
 
-#col1 {
-	float: left;
-	width: 410px;
-}
-
-#col2 {
-	float: left;
-	width: 410px;
-}
-
-#col3 {
+#col {
 	float: left;
 	width: 410px;
 }
