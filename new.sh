@@ -6,7 +6,7 @@ DESC="$2"
 
 NAME=`grep "<name>" "$FILE" | wc -l`
 if [ $NAME -eq 0 ]; then
-	sed -i 's/<trk>/<trk><name>TrekBuddy<\/name>/g' "$FILE"
+	sed -i 's/<trk>/<trk><name>'$2'<\/name>/g' "$FILE"
 fi
 
 #create screenshot
