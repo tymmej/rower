@@ -4,6 +4,10 @@
 FILE="$1"
 DESC="$2"
 
+if [ ! -e "$1" ]; then
+    exit 1
+fi
+
 NAME=`grep "<name>" "$FILE" | wc -l`
 if [ $NAME -eq 0 ]; then
 	sed -i 's/<trk>/<trk><name>'$2'<\/name>/g' "$FILE"
