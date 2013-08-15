@@ -1,4 +1,4 @@
 maps/
-*.gpx
+gpx/
 www/gpx.json
 gpxlib.pyc

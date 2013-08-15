@@ -16,20 +16,18 @@ fi
 #create screenshot
 viking ~/documents/gpx/viking "$FILE" &
 PID=$!
-FILE=`echo $FILE | sed -e 's/gpx/png/g'`
-scrot -d 2 ~/documents/gpx/"$FILE"
+MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
+scrot -d 2 ~/documents/gpx/"$MAP"
 kill $PID
 
 #convert screenshot
-convert -crop 1396x791+202+87 "$FILE" "$FILE"
-FILE_MINI=`echo "$FILE" | sed 's/^/mini-/'`
-convert -resize 20% "$FILE" "$FILE_MINI"
+convert -crop 1396x791+202+87 "$MAP" "$MAP"
+MAP_MINI="mini-$MAP"
+convert -resize 20% "$MAP" "$MAP_MINI"
 
 #move screenshot to folder
-mv "$FILE" www/maps/
-mv "$FILE_MINI" www/maps/
-
-FILE=`echo "$FILE" | sed -e 's/png/gpx/g'`
+mv "$MAP" maps/
+mv "$MAP_MINI" maps/
 
 #get stats from gpx file
 STATS=`./gpxstats.py "$FILE"`
@@ -51,9 +49,7 @@ echo ",
 mv www/gpx.old.json www/gpx.json
 
 #transfer files
-FILE=`echo $FILE | sed -e 's/gpx/png/g'`
-scp -P 23 www/maps/"$FILE" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
-FILE=`echo "$FILE" | sed -e 's/png/gpx/g'`
-scp -P 23 www/maps/"$FILE_MINI" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
+scp -P 23 maps/"$MAP" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
+scp -P 23 maps/"$MAP_MINI" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/maps/
 scp -P 23 www/gpx.json tymmej@tymejczyk.pl:/www/dane/tymmej/rower/
 scp -P 23 "$FILE" tymmej@tymejczyk.pl:/www/dane/tymmej/rower/gpx/
