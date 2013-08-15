@@ -35,10 +35,11 @@ DIST=`echo "$STATS" | awk '{print $1}'`
 TIME=`echo "$STATS" | awk '{print $2}'`
 
 #add stats to json
+NAME=`echo $FILE | sed -e 's/gpx\///'`
 head -n -2 www/gpx.json > www/gpx.old.json
 echo ",
 {
-\"name\": \"$FILE\",
+\"name\": \"$NAME\",
 \"desc\": \"$DESC\",
 \"dist\": \"$DIST\",
 \"time\": \"$TIME\",
