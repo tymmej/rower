@@ -14,10 +14,9 @@
 $file=file_get_contents('gpx.json');
 $json=json_decode($file, true);
 
-$i=0;
-$j=0;
-
 //create own array
+$i=0;
+
 $trips=array();
 foreach($json['trips'] as $trip) {
 	$trips[$i]['name']=$trip['name'];
@@ -40,9 +39,42 @@ foreach ($trips as $trip) {
 }
 array_multisort($trips, SORT_DESC, $dates);
 
+//read serwis
+$file=file_get_contents('serwis.json');
+$json=json_decode($file, true);
 
+$i=0;
+
+$serwis=array();
+foreach($json['serwis'] as $czesc) {
+        $serwis[$i]['name']=$czesc['name'];
+        $serwis[$i]['dist']=$czesc['dist'];
+        $serwis[$i]['date']=$czesc['date'];
+}
+
+//calculate distance since last check
+foreach($serwis as &$czesc) {
+	$i=0;
+	$czesc['driven']=0;
+	$pos=strpos($trips[$i]['date'],'.');
+	$date=substr($trips[$i]['date'], 0, $pos);
+	while(TRUE) {
+		$date=substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'));
+		if($date>=$czesc['date']) {
+			$czesc['driven']+=$trips[$i]['dist'];
+			$i++;
+		}
+		else {
+			break;
+		}
+	}
+}
+
+//create one trip stats and put data for monthly
 $table=array();
 $stats=array();
+
+$i=0;
 
 foreach($trips as $trip) {
 	$year=substr($trip['name'], 0, 4);
@@ -51,11 +83,13 @@ foreach($trips as $trip) {
 	$stats[$year][$month]['time']+=$trip['seconds'];
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
-	$table[$j].="\t<tr>\n\t\t<th colspan=\"4\"><a href=\"gpx.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n\t</tr>\n";
-	$table[$j].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n\t</tr>\n";
-	$j=++$j%3;
+	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\"><a href=\"gpx-gmaps.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n\t</tr>\n";
+	$table[$i].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n\t</tr>\n";
+	$i=++$i%3;
 }
 
+//create monthly stats
+$i=0;
 $j=0;
 echo "<div id=\"stats\">\n<table>\n\t<tr><td></td>";
 foreach($stats as $year => $stat) {
@@ -81,7 +115,7 @@ for($k=0; $k<$j; $k++) {
 }
 echo "</tr>\n";
 
-//create stats
+//print stats
 for($i=12; $i>=1; $i--) {
 	$empty=1;
 	$stat="";
@@ -104,6 +138,16 @@ for($i=12; $i>=1; $i--) {
 }
 
 echo "</table>\n</div>\n\n";
+
+//serwis
+$ilekm=123.12;
+$celkm=100;
+echo "<div id=\"serwis\">\n<table>\n";
+echo "<tr><th>Część</th><th>Przejechane</th><th>Co ile</th></tr>";
+foreach($serwis as $czesc) {
+	echo "<tr><td>".$czesc['name']."</td><td>".$czesc['driven']."</td><td>".$czesc['dist']."</td></tr>";
+}
+echo "</table>\n</div>";
 
 //print tables
 for($i=0; $i<3; $i++) {
