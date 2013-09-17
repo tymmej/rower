@@ -8,6 +8,14 @@
 <body>
 <div id="container">
 
+<div id="upload">
+<form enctype="multipart/form-data" action="process.php" method="post">
+Opis: <input name="desc" type="text" />
+<input name="gpx"  type="file" />
+<input type="submit" value="Go" />
+</form>
+</div>
+
 <?php
 
 //read json
@@ -140,8 +148,6 @@ for($i=12; $i>=1; $i--) {
 echo "</table>\n</div>\n\n";
 
 //serwis
-$ilekm=123.12;
-$celkm=100;
 echo "<div id=\"serwis\">\n<table>\n";
 echo "<tr><th>Część</th><th>Przejechane</th><th>Co ile</th></tr>";
 foreach($serwis as $czesc) {
