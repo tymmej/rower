@@ -49,6 +49,16 @@ td {
 	width: 1248px;
 }
 
+#serwis {
+	width: 1248px;
+}
+
+#upload {
+	width: 1220px;
+	border:#ccc 1px solid;
+	margin-left: 20px;
+}
+
 #col {
 	float: left;
 	width: 410px;
