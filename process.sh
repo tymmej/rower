@@ -2,8 +2,6 @@
 
 cd /www/dane/tymmej/rower/tmp
 
-chown -f tymmej:users $FILE
-
 #get parameters
 FILE="$1"
 DESC="$2"
@@ -22,7 +20,7 @@ viking --display=:1 ../viking "$FILE" &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
 sleep 6
-DISPLAY=:1 import -window root -crop 1348x800+250+73 ../maps/$MAP
+DISPLAY=:1 import -window root -crop 1400x795+200+78 ../maps/$MAP
 kill $PID
 
 MAP_MINI="mini-$MAP"

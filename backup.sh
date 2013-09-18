@@ -49,7 +49,7 @@ paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
 rpaths=("/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
-	"$USER@$ADDRESS:/www/dane/tymmej/"
+	"www-data@$ADDRESS:/www/dane/tymmej/"
 )
 
 

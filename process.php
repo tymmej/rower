@@ -7,7 +7,7 @@ $uploadfile="/www/dane/tymmej/rower/tmp/" . basename($_FILES['gpx']['name']);
 
 if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	$status=1;
-	$cmd="sudo -u tymmej /www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $_POST["desc"];
+	$cmd="/www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $_POST["desc"];
 	exec($cmd);
 }
 else {
