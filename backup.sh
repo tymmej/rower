@@ -6,11 +6,11 @@ PORT="23"
 USER="tymmej"
 
 #rsync options
-OPTIONS="-rtDHx --delete --delete-excluded"
+OPTIONS="-rtDHxl --delete --delete-excluded"
 
 #which enabled, start at 0
 #look at paths()
-enabled=(1 1 1)
+enabled=(1 1 1 1)
 
 #get options from cli
 #before paths, becouse of $ADDRESS
@@ -39,15 +39,17 @@ Usage:
 done
 
 #local paths
-paths=("/home/tymmej/documents/gpx/inne"
-	"/home/tymmej/documents/gpx/szlaki"
-	"$USER@$ADDRESS:/www/dane/tymmej/rower/"
+paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
+	"$USER@$ADDRESS:/www/dane/tymmej/rower/maps"
+	"$USER@$ADDRESS:/www/dane/tymmej/rower/gpx.json"
+	"/home/tymmej/documents/gpx/"
 )
 
 #dest paths
-rpaths=("$USER@$ADDRESS:/www/dane/tymmej/rower"
+rpaths=("/home/tymmej/documents/gpx"
+	"/home/tymmej/documents/gpx"
+	"/home/tymmej/documents/gpx"
 	"$USER@$ADDRESS:/www/dane/tymmej/rower"
-	"/home/tymmej/documents/gpx/"
 )
 
 
