@@ -14,6 +14,9 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
         	$cmd="/www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $desc;
 		exec($cmd);
 	}
+	else{
+		delete($uploadfile);
+	}
 }
 else {
 	$status=0;
