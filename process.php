@@ -15,7 +15,7 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 		exec($cmd);
 	}
 	else{
-		delete($uploadfile);
+		unlink($uploadfile);
 	}
 }
 else {
