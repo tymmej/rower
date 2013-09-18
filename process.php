@@ -6,9 +6,14 @@
 $uploadfile="/www/dane/tymmej/rower/tmp/" . basename($_FILES['gpx']['name']);
 
 if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
-	$status=1;
-	$cmd="/www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $_POST["desc"];
-	exec($cmd);
+	$xml = XMLReader::open($uploadfile);
+	$xml->setParserProperty(XMLReader::VALIDATE, true);
+	if($xml->isValid()){
+		$status=1;
+		$desc=ereg_replace("[^A-Za-z0-9-]", "", $_POST['desc']);
+        	$cmd="/www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $desc;
+		exec($cmd);
+	}
 }
 else {
 	$status=0;
