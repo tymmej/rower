@@ -42,14 +42,14 @@ done
 paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
 	"$USER@$ADDRESS:/www/dane/tymmej/rower/maps"
 	"$USER@$ADDRESS:/www/dane/tymmej/rower/gpx.json"
-	"/home/tymmej/documents/gpx/"
+	"/home/tymmej/documents/rower"
 )
 
 #dest paths
-rpaths=("/home/tymmej/documents/gpx/"
-	"/home/tymmej/documents/gpx/"
-	"/home/tymmej/documents/gpx/"
-	"$USER@$ADDRESS:/www/dane/tymmej/rower"
+rpaths=("/home/tymmej/documents/rower"
+	"/home/tymmej/documents/rower"
+	"/home/tymmej/documents/rower"
+	"$USER@$ADDRESS:/www/dane/tymmej/"
 )
 
 
