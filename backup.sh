@@ -46,9 +46,9 @@ paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
 )
 
 #dest paths
-rpaths=("/home/tymmej/documents/gpx"
-	"/home/tymmej/documents/gpx"
-	"/home/tymmej/documents/gpx"
+rpaths=("/home/tymmej/documents/gpx/"
+	"/home/tymmej/documents/gpx/"
+	"/home/tymmej/documents/gpx/"
 	"$USER@$ADDRESS:/www/dane/tymmej/rower"
 )
 
