@@ -18,7 +18,7 @@ if [ $NAME -eq 0 ]; then
 fi
 
 #create screenshot
-viking --display=:1 /www/dane/tymmej/rower/viking "$FILE" &
+viking --display=:1 ../viking "$FILE" &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
 sleep 6
