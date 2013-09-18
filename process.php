@@ -10,7 +10,7 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	$xml->setParserProperty(XMLReader::VALIDATE, true);
 	if($xml->isValid()){
 		$status=1;
-		$desc=ereg_replace("[^A-Za-z0-9-]", "", $_POST['desc']);
+		$desc=ereg_replace("[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]", "", $_POST['desc']);
         	$cmd="/www/dane/tymmej/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $desc;
 		exec($cmd);
 	}
