@@ -16,6 +16,8 @@ if [ $NAME -eq 0 ]; then
 fi
 
 #create screenshot
+DISPLAY=:1 xdotool mousemove 1 1
+DISPLAY=:1 xdotool mousemove 0 0
 viking --display=:1 ../viking "$FILE" &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
