@@ -3,7 +3,7 @@
 #variables
 ADDRESS="tymejczyk.pl"
 PORT="23"
-USER="tymmej"
+USER="root"
 
 #rsync options
 OPTIONS="-rtDHxl --delete --delete-excluded"
@@ -39,9 +39,9 @@ Usage:
 done
 
 #local paths
-paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
-	"$USER@$ADDRESS:/www/dane/tymmej/rower/maps"
-	"$USER@$ADDRESS:/www/dane/tymmej/rower/gpx.json"
+paths=("$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/gpx"
+	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/maps"
+	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/gpx.json"
 	"/home/tymmej/documents/rower"
 )
 
@@ -49,7 +49,7 @@ paths=("$USER@$ADDRESS:/www/dane/tymmej/rower/gpx"
 rpaths=("/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
-	"www-data@$ADDRESS:/www/dane/tymmej/"
+	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www"
 )
 
 

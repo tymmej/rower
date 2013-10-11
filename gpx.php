@@ -32,7 +32,8 @@ foreach($json['trips'] as $trip) {
 	$trips[$i]['desc']=$trip['desc'];
 	$trips[$i]['dist']=$trip['dist'];
 	$trips[$i]['map']=str_replace('gpx', 'png', $trips[$i]['name']);
-	$trips[$i]['seconds']=explode(':', $trip['time'])[0]*60+explode(':', $trip['time'])[1];
+	$time=explode(':', $trip['time']);
+	$trips[$i]['seconds']=$time[0]*60+$time[1];
 	$trips[$i]['avg']=$avg=round($trips[$i]['dist']/$trips[$i]['seconds']*3600, 2);
 	$hours=(int)($trips[$i]['seconds']/3600);
 	$minutes=(int)(($trips[$i]['seconds']-$hours*3600)/60);

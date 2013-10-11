@@ -85,7 +85,7 @@ def outputTrackDetails(track, waypoints, units):
 
   start = datetime.strptime(statistics['starttime'], "%Y-%m-%dT%H:%M:%S.%fZ")
   end = datetime.strptime(statistics['endtime'], "%Y-%m-%dT%H:%M:%S.%fZ")
-  diff = (end-start).total_seconds()
+  diff = (end-start).seconds
 
 #  print " total distance [%s]:\t%.2f" % (distanceUnits, distance * distanceConverter)
 #  print " ascent [%s]:\t%.1f" % (elevationUnits, statistics['ascent']) 
