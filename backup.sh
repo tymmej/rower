@@ -2,7 +2,7 @@
 
 #variables
 ADDRESS="tymejczyk.pl"
-OPTIONS="-a --delete --delete-excluded --password-file=pass --exclude=pass"
+OPTIONS="-a --delete --delete-excluded --password-file=/home/tymmej/documents/rower/pass --exclude=/home/tymmej/documents/rower/pass"
 
 #which enabled, start at 0
 #look at paths()
