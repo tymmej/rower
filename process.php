@@ -26,7 +26,7 @@ echo "<head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
         <title>Rower</title>";
 if($status){
-	echo "<meta http-equiv=\"Refresh\" content=\"3; url=index.php\"";
+	echo "<meta http-equiv=\"Refresh\" content=\"3; url=gpx.php\"";
 }
 echo "<link rel=\"stylesheet\" href=\"gpx.css\" />
 </head>
