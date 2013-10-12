@@ -2,11 +2,7 @@
 
 #variables
 ADDRESS="tymejczyk.pl"
-PORT="23"
-USER="root"
-
-#rsync options
-OPTIONS="-rtDHxl --delete --delete-excluded"
+OPTIONS="-a --delete --delete-excluded --password-file=pass --exclude=pass"
 
 #which enabled, start at 0
 #look at paths()
@@ -14,7 +10,7 @@ enabled=(1 1 1 1)
 
 #get options from cli
 #before paths, becouse of $ADDRESS
-while getopts "hwnaldp" options
+while getopts "hldp" options
 do
 case $options in
 	h)
@@ -27,7 +23,6 @@ Usage:
 		;;
 	l)
 		ADDRESS="192.168.1.4"
-		PORT="22"
 		;;
 	d)
 		OPTIONS="$OPTIONS -n"
@@ -39,9 +34,9 @@ Usage:
 done
 
 #local paths
-paths=("$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/gpx"
-	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/maps"
-	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/gpx.json"
+paths=("$ADDRESS::www/rower/gpx"
+	"$ADDRESS::www/rower/maps"
+	"$ADDRESS::www/rower/gpx.json"
 	"/home/tymmej/documents/rower"
 )
 
@@ -49,22 +44,18 @@ paths=("$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/gpx
 rpaths=("/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
 	"/home/tymmej/documents/rower"
-	"$USER@$ADDRESS:/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www"
+	"$ADDRESS::www"
 )
 
-
-#run rsync
 for index in ${!paths[*]}
 do
-	extra=()
 	if [ ${enabled[$index]} -eq 1 ]; then
-        echo ""
+	echo ""
 		echo "<===============================================================================>"
-        echo "${paths[$index]} -> ${rpaths[$index]}"
-		cmd="rsync $OPTIONS ${extra[@]} \
-			-e 'ssh -p '"$PORT" "${paths[$index]}" \
-			"${rpaths[$index]}""
-		eval $cmd
-        echo ">===============================================================================<"
+	echo "${paths[$index]} -> ${rpaths[$index]}"
+		rsync $OPTIONS $extra \
+			"${paths[$index]}" \
+			"${rpaths[$index]}"
+	echo ">===============================================================================<"
 	fi
 done
