@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for FILE in gpx/*.gpx
+for FILE in $1
 do
 FILE=`echo $FILE | sed -e 's/gpx\///'`
 viking viking gpx/"$FILE" &
