@@ -6,6 +6,17 @@ cd $BASE_PATH
 FILE="$1"
 
 #create screenshot
+URL=`echo $FILE | sed -e 's/.gpx//'`
+firefox --display=:1 gpx-auto.html?file=$URL &
+PID=$!
+MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
+sleep 18
+DISPLAY=:1 import -window root -crop 1550x800+25+50 maps/$MAP
+sleep 2
+DISPLAY=:1 import -window root -crop 1550x800+25+50 maps/$MAP
+kill $PID
+
+
 viking --display=:1 viking gpx/$FILE &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
