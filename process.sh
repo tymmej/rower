@@ -16,15 +16,5 @@ sleep 2
 DISPLAY=:1 import -window root -crop 1550x800+25+50 maps/$MAP
 kill $PID
 
-
-viking --display=:1 viking gpx/$FILE &
-PID=$!
-MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
-sleep 6
-DISPLAY=:1 import -window root -crop 1375x790+220+85 maps/$MAP
-sleep 2
-DISPLAY=:1 import -window root -crop 1375x790+220+85 maps/$MAP
-kill $PID
-
 MAP_MINI="mini-$MAP"
 convert -resize 20% maps/$MAP maps/$MAP_MINI
