@@ -1,6 +1,9 @@
 #!/bin/sh
 
-cd /media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/tmp
+BASE_PATH="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/"
+
+cd $BASE_PATH
+cd tmp
 
 #get parameters
 FILE="$1"

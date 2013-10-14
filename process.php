@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <?php
-$uploadfile="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/tmp/" . basename($_FILES['gpx']['name']);
+$base_path="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/";
+
+$uploadfile=$base_path . "tmp/" . basename($_FILES['gpx']['name']);
 
 if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	$xml = XMLReader::open($uploadfile);
@@ -11,7 +13,7 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	if($xml->isValid()){
 		$status=1;
 		$desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]/u", "", $_POST['desc']);
-        	$cmd="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/process.sh " . basename($_FILES['gpx']['name']) . " " . $desc;
+        	$cmd=$base_path . "process.sh " . basename($_FILES['gpx']['name']) . " " . $desc;
 		exec($cmd);
 	}
 	else{
