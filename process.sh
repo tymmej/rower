@@ -6,7 +6,7 @@ cd $BASE_PATH
 FILE="$1"
 
 #create screenshot
-viking --display=:1 ../viking "gpx/$FILE" &
+viking --display=:1 viking gpx/$FILE &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
 sleep 6

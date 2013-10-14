@@ -36,10 +36,10 @@ function timeDiff($curTime, $prevTime) {
 }
 
 //filename of new gpx
-$file=basename($_FILES['gpx']['name']);
-
+$filename=basename($_FILES['gpx']['name']);
+$file=$base_path . "gpx/" . $filename;
 //move file to tmp folder
-$uploadfile=$base_path . "tmp/" . $file;
+$uploadfile=$base_path . "tmp/" . $filename;
 if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 //check if file valid by using xml checks
 	$xml=XMLReader::open($uploadfile);
@@ -47,7 +47,7 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	if($xml->isValid()) {
 		$status=1;
 		$desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]/u", "", $_POST['desc']);
-		rename($uploadfile, $base_path . "gpx/" . $file);
+		rename($uploadfile, $file);
 	}
 	else{
 		unlink($uploadfile);
@@ -98,9 +98,8 @@ foreach ($gpx->trk->trkseg->trkpt as $pt) {
 $distance=round($distance/1000, 2);
 
 //read gpx.json
-$filename=$file;
-$file=file_get_contents("gpx.json");
-$json=json_decode($file, true);
+$text=file_get_contents($base_path . "gpx.json");
+$json=json_decode($text, true);
 
 //create new trip
 $new_trip=array();
@@ -114,7 +113,7 @@ $new_trip['tags']="";
 array_push($json['trips'], $new_trip);
 
 //write data
-file_put_contents("gpx.json", json_encode($json));
+file_put_contents($base_path . "gpx.json", json_encode($json));
 
 //create screenshot
 $cmd=$base_path . "process.sh " . basename($_FILES['gpx']['name']);
