@@ -1,11 +1,12 @@
 #!/bin/sh
 
 BASE_PATH="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/"
-
 cd $BASE_PATH
 
+FILE="$1"
+
 #create screenshot
-viking --display=:1 ../viking "gpx/$1" &
+viking --display=:1 ../viking "gpx/$FILE" &
 PID=$!
 MAP=`echo $FILE | sed -e 's/gpx\///' -e 's/gpx/png/'`
 sleep 6

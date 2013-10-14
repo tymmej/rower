@@ -47,7 +47,7 @@ if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 	if($xml->isValid()) {
 		$status=1;
 		$desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]/u", "", $_POST['desc']);
-		rename($uploadfile, $base_path . $file);
+		rename($uploadfile, $base_path . "gpx/" . $file);
 	}
 	else{
 		unlink($uploadfile);
@@ -114,7 +114,7 @@ $new_trip['tags']="";
 array_push($json['trips'], $new_trip);
 
 //write data
-file_put_contents("gpx.json", jsone_encode($json));
+file_put_contents("gpx.json", json_encode($json));
 
 //create screenshot
 $cmd=$base_path . "process.sh " . basename($_FILES['gpx']['name']);
@@ -126,7 +126,7 @@ echo "<head>
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 <title>Rower</title>";
 if($status){
-	echo "<meta http-equiv=\"Refresh\" content=\"3; url=gpx.php\"";
+	echo "<meta http-equiv=\"Refresh\" content=\"300; url=gpx.php\"";
 }
 echo "<link rel=\"stylesheet\" href=\"gpx.css\" />
 </head>
