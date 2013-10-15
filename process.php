@@ -76,8 +76,8 @@ $distance=0;
 $time=0;
 
 //calculate distance and time
-$isFirst=true;
 foreach ($gpx->trk->trkseg as $trkseg) {
+	$isFirst=true;
 	foreach ($trkseg->trkpt as $pt) {
 		if($isFirst) {
 			$cur=(array)$pt;
