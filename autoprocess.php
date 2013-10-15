@@ -53,24 +53,26 @@ $distance=0;
 $time=0;
 
 //calculate distance and time
-$isFirst=true;
-foreach ($gpx->trk->trkseg->trkpt as $pt) {
-	if($isFirst) {
+foreach ($gpx->trk->trkseg as $trkseg) {
+	$isFirst=true;
+	foreach ($trkseg->trkpt as $pt) {
+		if($isFirst) {
+			$cur=(array)$pt;
+		        $cur['lat']=$cur['@attributes']['lat'];
+		        $cur['lon']=$cur['@attributes']['lon'];
+			$prev=$cur;
+			$isFirst=false;
+			continue;
+		}
 		$cur=(array)$pt;
-	        $cur['lat']=$cur['@attributes']['lat'];
-	        $cur['lon']=$cur['@attributes']['lon'];
+		$cur['lat']=$cur['@attributes']['lat'];
+		$cur['lon']=$cur['@attributes']['lon'];
+
+		$distance+=haversineDistance($cur['lat'], $cur['lon'], $prev['lat'], $prev['lon']);
+		$time+=timeDiff($cur['time'], $prev['time']);
+
 		$prev=$cur;
-		$isFirst=false;
-		continue;
 	}
-	$cur=(array)$pt;
-	$cur['lat']=$cur['@attributes']['lat'];
-	$cur['lon']=$cur['@attributes']['lon'];
-
-	$distance+=haversineDistance($cur['lat'], $cur['lon'], $prev['lat'], $prev['lon']);
-	$time+=timeDiff($cur['time'], $prev['time']);
-
-	$prev=$cur;
 }
 $distance=round($distance/1000, 2);
 
