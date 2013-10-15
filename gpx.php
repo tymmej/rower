@@ -12,7 +12,7 @@
 <form enctype="multipart/form-data" action="process.php" method="post">
 Opis: <input name="desc" type="text" />
 <input name="gpx"  type="file" />
-<input type="submit" value="Go" />
+<input type="submit" value="Dodaj" />
 </form>
 </div>
 
