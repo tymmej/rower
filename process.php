@@ -119,7 +119,6 @@ file_put_contents($base_path . "gpx.json", json_encode($json));
 
 //create screenshot
 $cmd=$base_path . "process.sh " . $filename;
-echo $cmd;
 exec($cmd);
 }
 
