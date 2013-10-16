@@ -3,6 +3,18 @@
 BASE_PATH="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/"
 cd $BASE_PATH
 
+MODE=$1
+STATS=0
+MAPS=0
+
+if [ $MODE -eq 1 -o $MODE -eq 3 ]; then
+	STATS=1
+fi
+
+if [ $MODE -eq 2 -o $MODE -eq 3 ]; then
+	MAPS=1
+fi
+
 for FILE in gpx/*.gpx
 do
 	FILE=`echo $FILE | sed -e 's/gpx\///'`
