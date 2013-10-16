@@ -15,6 +15,10 @@ if [ $MODE -eq 2 -o $MODE -eq 3 ]; then
 	MAPS=1
 fi
 
+if [ $2 -eq 1 ]; then
+	grep -E 'desc|name' gpx.json | sed -e 's/\s//g' -e 's/"name"//g' -e 's/"desc"//g' -e 's/,//g' -e 's/:"//g' -e 's/"//g' > new.json
+fi
+
 for FILE in gpx/*.gpx
 do
 	FILE=`echo $FILE | sed -e 's/gpx\///'`
