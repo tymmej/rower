@@ -31,9 +31,11 @@ do
 	if [ $NUMBER -ne 1 ]; then
 		echo $NUMBER
 		DESC=`sed -n "${NUMBER}{p;q;}" new.json`
-		php process.php $FILE "$DESC"
-		./process.sh $FILE
+		if [ $STATS -eq 1 ]; then
+			php process.php $FILE "$DESC"
+		fi
+		if [ $MAPS -eq 1 ]; then
+			./process.sh $FILE
+		fi
 	fi
 done
-
-sed -i -e 's/\//g' gpx.json
