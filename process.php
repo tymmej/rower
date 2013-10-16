@@ -21,14 +21,7 @@ function timeDiff($curTime, $prevTime) {
 	$curTime=strtotime($curTime);
 	$prevTime=strtotime($prevTime);
 
-	$diff=$curTime-$prevTime;
-
-//if difference more than 20s, set 5s (pause, eg. ice creams)
-	if($diff > 20) {
-		$diff=5;
-	}
-
-	return $diff;
+	return $curTime-$prevTime;
 }
 
 //filename of new gpx
