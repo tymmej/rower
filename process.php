@@ -66,7 +66,9 @@ if($mode==1){
 			$status=0;
 	}
 }
-
+else {
+	$status=1;
+}
 //if no error, continue
 if($status){
 	//load gpx file	
