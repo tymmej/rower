@@ -16,8 +16,10 @@ if [ $MODE -eq 2 -o $MODE -eq 3 ]; then
 fi
 
 if [ $2 -eq 1 ]; then
-	grep -E 'desc|name' gpx.json | sed -e 's/\s//g' -e 's/name//g' -e 's/desc//g' -e 's/,//g' -e 's/"//g' > new.json
+	grep -E 'desc|name' gpx.json.bak | sed -e 's/\s//g' -e 's/name//g' -e 's/desc//g' -e 's/[,:"]//g' > new.json
 fi
+
+cp example/gpx.json.empty gpx.json
 
 for FILE in gpx/*.gpx
 do
@@ -33,3 +35,5 @@ do
 		./process.sh $FILE
 	fi
 done
+
+sed -i -e 's/\//g' gpx.json
