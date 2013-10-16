@@ -34,7 +34,7 @@ function timeDiff($curTime, $prevTime) {
 //filename of new gpx
 if(isset($_FILES['gpx']['name'])){
 	$filename=basename($_FILES['gpx']['name']);
-	$desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]/u", "", $_POST['desc']);
+	$desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-\s]/u", "", $_POST['desc']);
 	//1-upload; 2-autoprocess
 	$mode=1;
 }
@@ -43,6 +43,8 @@ else {
 	$desc=$argv[2];
 	$mode=2;
 }
+
+$file=$base_path . "gpx/" . $filename;
 
 //move file to tmp folder
 if($mode==1){
@@ -67,8 +69,7 @@ if($mode==1){
 
 //if no error, continue
 if($status){
-	//load gpx file
-	$file=$base_path . "gpx/" . $filename;
+	//load gpx file	
 	$text=file_get_contents($file);
 
 	//check if gpx contains name tag, if not: add
