@@ -156,6 +156,6 @@ if($mode==1) {
 	}
 
 	echo "</body>
-</html>"
+</html>";
 }
 ?>
