@@ -123,8 +123,10 @@ if($status){
 	file_put_contents($base_path . "gpx.json", json_encode($json));
 
 	//create screenshot
-	$cmd=$base_path . "process.sh " . $filename;
-	exec($cmd);
+	if($mode==1){
+		$cmd=$base_path . "process.sh " . $filename;
+		exec($cmd);
+	}
 }
 
 
