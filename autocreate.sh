@@ -20,7 +20,7 @@ chown php:www-data gpx.json
 
 for FILE in gpx/*.gpx
 do
-	DESC=`php get_name.php $FILE`
+	DESC=`grep \<name\> $FILE | sed -e 's/<trk><name>//' -e 's/<\/name>//' -e 's/\s//'`
 	FILE=`echo $FILE | sed -e 's/gpx\///'`
 	if [ $STATS -eq 1 ]; then
 		php process.php $FILE "$DESC"
