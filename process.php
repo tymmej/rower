@@ -33,7 +33,9 @@ if(isset($_FILES['gpx']['name'])){
 }
 else {
 	$filename=$argv[1];
-	$desc=$argv[2];
+	if(!$argv[2]) {
+		$desc="nodesc";
+	}
 	$mode=2;
 }
 
@@ -65,25 +67,24 @@ else {
 
 //if no error, continue
 if($status){
-	//load gpx file	
-	$text=file_get_contents($file);
+	//load gpx file	to simpleXml
+	$gpx=simplexml_load_file($file);
 
 	//check if gpx contains name tag, if not: add
-	if(!preg_match("/<name>/", $text)) {
-		$text = preg_replace("/<trk>/", "<trk><name>" . $desc . "</name>", $text);
-		file_put_contents($file, $text);
+	$name=$gpx->trk->name;
+	echo $name;
+	if($name!=$desc) {
+		$gpx->trk->name=$desc;
+		$gpx->asXml($file);
 	}
-
-	//load gpx file to SimpleXml
-	$gpx=simplexml_load_file($file);
 
 	$distance=0;
 	$time=0;
 
 	//calculate distance and time
-	foreach ($gpx->trk->trkseg as $trkseg) {
+	foreach($gpx->trk->trkseg as $trkseg) {
 		$isFirst=true;
-		foreach ($trkseg->trkpt as $pt) {
+		foreach($trkseg->trkpt as $pt) {
 			if($isFirst) {
 				$cur=(array)$pt;
 					$cur['lat']=$cur['@attributes']['lat'];
