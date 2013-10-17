@@ -23,7 +23,10 @@ cp example/gpx.json.empty gpx.json
 
 for FILE in gpx/*.gpx
 do
-	DESC=`grep \<name\> $FILE | sed -e 's/<trk><name>//' -e 's/<\/name>//' -e 's/\s//'`
+<<<<<<< HEAD
+	DESC=`php get_name.php $FILE`
+=======
+>>>>>>> parent of b93d9f1... Update autocreate
 	FILE=`echo $FILE | sed -e 's/gpx\///'`
 	NUMBER=`grep -n $FILE new.json | awk -F: '{print $1}'`
 	NUMBER=$(($NUMBER + 1))
