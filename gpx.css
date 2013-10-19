@@ -61,7 +61,7 @@ td {
 }
 
 .trip1 {
-	background: #a9f2a9;
+	background: #dedfe0;
 }
 
 #upload {
@@ -131,5 +131,5 @@ table tr:hover td{
 }
 
 table tr:hover .trip1 {
-	background: #a9f2a9;
+	background: #dedfe0;
 }
