@@ -66,8 +66,6 @@ foreach($json['serwis'] as $czesc) {
 foreach($serwis as &$czesc) {
 	$i=0;
 	$czesc['driven']=0;
-	$pos=strpos($trips[$i]['date'],'.');
-	$date=substr($trips[$i]['date'], 0, $pos);
 	while(TRUE) {
 		$date=substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'));
 		if($date>=$czesc['date']) {
@@ -156,6 +154,42 @@ foreach($serwis as $czesc) {
 	echo "<tr><td>".$czesc['name']."</td><td>".$czesc['driven']."</td><td>".$czesc['dist']."</td></tr>";
 }
 echo "</table>\n</div>";
+
+//calendar
+$daysOfWeek=array("nd", "pn", "wt", "śr", "cz", "pt", "so");
+$dayOfWeek=date('N');
+$today=date('Ymd');
+echo "<div id=\"calendar\">
+<table><tr>";
+for($i=28; $i; $i--) {
+	echo "<th>" . $daysOfWeek[($i+$dayOfWeek)%7] ."</th>";
+	$wasTrip[$i-1]=0;
+}
+echo "</tr>\n";
+$endDate=date('Ymd', strtotime("-28 day"));
+$j=0;
+for($i=0; $i<28; $i++) {
+	while(TRUE) {
+		$date=substr($trips[$j]['date'], 0, strpos($trips[$j]['date'],'.'));
+		if($trips[$j]['date']!=$trips[$j+1]['date']) {
+			$j++;
+		}
+		if($date>=$endDate) {
+			$diff=(strtotime($today)-strtotime($date))/(60*60*24);
+			$wasTrip[$diff]=1;
+		}
+		else {
+			break;
+		}
+	}
+}
+echo "<tr>";
+for($i=0; $i<28; $i++) {
+	echo "<td class=\"trip" . $wasTrip[$i] . "\">".  date('d', strtotime(-$i . "day")) . "</td>";
+}
+echo "</tr>
+</table>
+</div>";
 
 //print tables
 for($i=0; $i<3; $i++) {

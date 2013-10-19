@@ -53,6 +53,17 @@ td {
 	width: 1248px;
 }
 
+#calendar {
+	width: 1248px;
+}
+
+.trip0 {
+}
+
+.trip1 {
+	background: #a9f2a9;
+}
+
 #upload {
 	width: 1220px;
 	border:#ccc 1px solid;
@@ -76,6 +87,7 @@ table {
 
 	width:98%;
 }
+
 table th {
 	padding:2px;
 	border-top:1px solid #fafafa;
@@ -85,33 +97,39 @@ table th {
 
 	background: #ededed;
 }
-table th:first-child{
+
+#stats table th:first-child{
 	text-align: left;
 	padding-left:2px;
 }
-table tr{
-	text-align: center;
-	padding-left:2px;
-}
-table tr td:first-child{
+
+#stats table tr td:first-child{
 	text-align: left;
 	padding-left:2px;
 	border-left: 0;
 }
+
+table tr{
+	text-align: center;
+	padding-left:2px;
+}
+
 table tr td {
 	padding:2px;
 	border-top: 1px solid #ffffff;
 	border-bottom:1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;
-	
 	background: #fafafa;
 }
-table tr.even td{
-	background: #f6f6f6;
-}
+
 table tr:last-child td{
 	border-bottom:0;
 }
+
 table tr:hover td{
 	background: #f2f2f2;
+}
+
+table tr:hover .trip1 {
+	background: #a9f2a9;
 }
