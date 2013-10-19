@@ -109,7 +109,7 @@ echo "</tr>\n";
 
 $months=array('', 'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień');
 
-echo "\t<tr><td>Total</td>";
+echo "\t<tr><td>Razem</td>";
 
 for($k=0; $k<$j; $k++) {
 	$hours=(int)($stats[$years[$k]]['time']/3600);
