@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Rower</title>
 	<link rel="stylesheet" href="gpx.css" />
+</head>
 <body>
 <div id="container">
 
@@ -93,7 +94,7 @@ foreach($trips as $trip) {
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
 	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\"><a href=\"gpx-gmaps.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n\t</tr>\n";
-	$table[$i].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=200 src=\"maps/mini-". $trip['map'] . "\" /></a></td>\n\t</tr>\n";
+	$table[$i].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=\"200px\" src=\"maps/mini-". $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" /></a></td>\n\t</tr>\n";
 	$i=++$i%3;
 }
 
@@ -158,7 +159,7 @@ echo "</table>\n</div>";
 
 //print tables
 for($i=0; $i<3; $i++) {
-	echo "<div id=\"col\">\n<table>\n";
+	echo "<div class=\"col\">\n<table>\n";
 	echo $table[$i];
 	echo "</table>\n</div>";
 }
