@@ -17,4 +17,4 @@ DISPLAY=:1 import -window root -crop 1550x800+25+50 maps/$MAP
 sudo -u root kill $PID
 
 MAP_MINI="mini-$MAP"
-convert -resize 20% maps/$MAP maps/$MAP_MINI
+convert -resize 200 maps/$MAP maps/$MAP_MINI
