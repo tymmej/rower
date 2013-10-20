@@ -66,7 +66,7 @@ foreach($json['serwis'] as $czesc) {
 foreach($serwis as &$czesc) {
 	$i=0;
 	$czesc['driven']=0;
-	while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.')>=$czesc['date']) {
+	while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'))>=$czesc['date']) {
 		$czesc['driven']+=$trips[$i]['dist'];
 		$i++;
 	}
@@ -172,7 +172,7 @@ for($i=28; $i; $i--) {
 echo "</tr>\n";
 $endDate=date('Ymd', strtotime("-28 day"));
 $i=0;
-while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.')>=$endDate) {
+while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'))>=$endDate) {
 	$diff=(strtotime($today)-strtotime($date))/(60*60*24);
 	$wasTrip[$diff]=1;
 	$i++;
