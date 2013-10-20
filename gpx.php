@@ -159,7 +159,7 @@ echo "</table>\n</div>\n\n";
 echo "<div id=\"serwis\">\n<table>\n";
 echo "<tr><th>Część</th><th>Przejechane</th><th>Co ile</th></tr>";
 foreach($serwis as $czesc) {
-	echo "<tr><td>".$czesc['name']."</td><td>".$czesc['driven']."</td><td>".$czesc['dist']."</td></tr>";
+	echo "<tr><td>" . $czesc['name'] . "</td><td>" . sprintf("%.2f", $czesc['driven']) . "</td><td>" . $czesc['dist'] . "</td></tr>";
 }
 echo "</table>\n</div>";
 
