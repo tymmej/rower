@@ -167,21 +167,17 @@ for($i=28; $i; $i--) {
 }
 echo "</tr>\n";
 $endDate=date('Ymd', strtotime("-28 day"));
-$j=0;
-for($i=0; $i<28; $i++) {
-	while(TRUE) {
-		$date=substr($trips[$j]['date'], 0, strpos($trips[$j]['date'],'.'));
-		if($trips[$j]['date']!=$trips[$j+1]['date']) {
-			$j++;
-		}
-		if($date>=$endDate) {
-			$diff=(strtotime($today)-strtotime($date))/(60*60*24);
-			$wasTrip[$diff]=1;
-		}
-		else {
-			break;
-		}
+$i=0;
+while(TRUE) {
+	$date=substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'));
+	if($date>=$endDate) {
+		$diff=(strtotime($today)-strtotime($date))/(60*60*24);
+		$wasTrip[$diff]=1;
 	}
+	else {
+		break;
+	}
+	++$i;
 }
 echo "<tr>";
 for($i=0; $i<28; $i++) {
