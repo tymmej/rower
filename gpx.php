@@ -136,6 +136,7 @@ for($i=12; $i>=1; $i--) {
 	$i_zero=sprintf("%02d",$i);
 	for($k=0; $k<$j; $k++) {
 		if(isset($stats[$years[$k]][$i_zero]['time']) && $stats[$years[$k]][$i_zero]['time']!=0) {
+			$empty=0;
 			$hours=(int)($stats[$years[$k]][$i_zero]['time']/3600);
 			$minutes=(int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60);
 			$seconds=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
@@ -147,7 +148,9 @@ for($i=12; $i>=1; $i--) {
 			$stat.="<td></td><td></td>";
 		}
 	}
-	echo $stat;
+	if(!$empty) {
+		echo $stat;
+	}
 }
 
 echo "</table>\n</div>\n\n";
