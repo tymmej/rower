@@ -79,7 +79,7 @@ foreach($serwis as &$czesc) {
 }
 
 //create one trip stats and put data for monthly
-$table=array();
+$table=array(0 => "", 1 => "", 2 => "");
 $stats=array();
 
 $i=0;
@@ -87,6 +87,12 @@ $i=0;
 foreach($trips as $trip) {
 	$year=substr($trip['name'], 0, 4);
 	$month=substr($trip['name'], 4, 2);
+	if(!isset($stats[$year])) $stats[$year]=array();
+	if(!isset($stats[$year][$month])) $stats[$year][$month]=array();
+	if(!isset($stats[$year][$month]['distance'])) $stats[$year][$month]['distance']=0;
+	if(!isset($stats[$year][$month]['time'])) $stats[$year][$month]['time']=0;
+	if(!isset($stats[$year]['distance'])) $stats[$year]['distance']=0;
+	if(!isset($stats[$year]['time'])) $stats[$year]['time']=0;
 	$stats[$year][$month]['distance']+=$trip['dist'];
 	$stats[$year][$month]['time']+=$trip['seconds'];
 	$stats[$year]['distance']+=$trip['dist'];
@@ -130,14 +136,14 @@ for($i=12; $i>=1; $i--) {
 	$stat.="\t<tr><td>" . $months[$i] . "</td>";
 	$i_zero=sprintf("%02d",$i);
 	for($k=0; $k<$j; $k++) {
-		if($stats[$years[$k]][$i_zero]['distance']!="") $empty=0;
-		$hours=(int)($stats[$years[$k]][$i_zero]['time']/3600);
-		$minutes=(int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60);
-		$seconds=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
+		if(isset($stats[$years[$k]][$i_zero]['distance'])) $empty=0;
+		$hours=isset($stats[$years[$k]][$i_zero]['time']) ? (int)($stats[$years[$k]][$i_zero]['time']/3600) : 0;
+		$minutes=isset($stats[$years[$k]][$i_zero]['time']) ? (int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60) : 0;
+		$seconds=isset($stats[$years[$k]][$i_zero]['time']) ? (int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60) : 0;
 		$time_readable=$hours. "h ". $minutes . "m " . $seconds . "s";
 		if($time_readable=="0h 0m 0s") $time_readable="";
-		$stat.="<td>" . $stats[$years[$k]][$i_zero]['distance'];
-		if($stats[$years[$k]][$i_zero]['distance']!="") $stat.=" km";
+		$stat.="<td>";
+		$stat.=isset($stats[$years[$k]][$i_zero]['distance']) ? ($stats[$years[$k]][$i_zero]['distance'] . " km") : "";
 		$stat.="</td><td>" . $time_readable . "</td>";
 	}
 	$stat.="</tr>\n";
