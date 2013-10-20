@@ -19,6 +19,14 @@ Opis: <input name="desc" type="text" />
 
 <?php
 
+function timeReadable($hours, $minutes, $seconds) {
+	return sprintf("%02d", $hours) . "h " . sprintf("%02d", $minutes) . "m " . sprintf("%02d", $seconds) . "s";
+}
+
+function timeReadableTrip($hours, $minutes, $seconds) {
+	return sprintf("%01d", $hours) . "h " . sprintf("%02d", $minutes) . "m " . sprintf("%02d", $seconds) . "s";
+}
+
 //read json
 $file=file_get_contents('gpx.json');
 $json=json_decode($file, true);
@@ -31,7 +39,7 @@ foreach($json['trips'] as $trip) {
 	$trips[$i]['name']=$trip['name'];
 	$trips[$i]['date']=str_replace('.gpx', '', $trips[$i]['name']);
 	$trips[$i]['desc']=$trip['desc'];
-	$trips[$i]['dist']=$trip['dist'];
+	$trips[$i]['dist']=sprintf("%.2f", $trip['dist']);
 	$trips[$i]['map']=str_replace('gpx', 'png', $trips[$i]['name']);
 	$time=explode(':', $trip['time']);
 	$trips[$i]['seconds']=$time[0]*60+$time[1];
@@ -39,7 +47,7 @@ foreach($json['trips'] as $trip) {
 	$hours=(int)($trips[$i]['seconds']/3600);
 	$minutes=(int)(($trips[$i]['seconds']-$hours*3600)/60);
 	$seconds=(int)($trips[$i]['seconds']-$hours*3600-$minutes*60);
-	$trips[$i]['time_readable']=$hours. "h ". $minutes . "m " . $seconds . "s";
+	$trips[$i]['time_readable']=timeReadableTrip($hours, $minutes, $seconds);
 	$i++;
 }
 
@@ -114,12 +122,9 @@ echo "\t<tr><td>Razem</td>";
 for($k=0; $k<$j; $k++) {
 	$hours=(int)($stats[$years[$k]]['time']/3600);
 	$minutes=(int)(($stats[$years[$k]]['time']-$hours*3600)/60);
-	$seconds2=(int)($stats[$years[$k]]['time']-$hours*3600-$minutes*60);
-	$time_readable=$hours. "h ". $minutes . "m " . $seconds2 . "s";
-	if($time_readable=="0h 0m 0s") $time_readable="";
-	echo "<td>" . $stats[$years[$k]]['distance'];
-	if($stats[$years[$k]]['distance']!="") echo " km";
-	echo "</td><td>" . $time_readable . "</td>";
+	$seconds=(int)($stats[$years[$k]]['time']-$hours*3600-$minutes*60);
+	echo "<td>" . sprintf("%06.2f", $stats[$years[$k]]['distance']) . " km";
+	echo "</td><td>" . timeReadable($hours, $minutes, $seconds) . "</td>";
 }
 echo "</tr>\n";
 
@@ -130,18 +135,18 @@ for($i=12; $i>=1; $i--) {
 	$stat.="\t<tr><td>" . $months[$i] . "</td>";
 	$i_zero=sprintf("%02d",$i);
 	for($k=0; $k<$j; $k++) {
-		if(isset($stats[$years[$k]][$i_zero]['distance'])) $empty=0;
-		$hours=isset($stats[$years[$k]][$i_zero]['time']) ? (int)($stats[$years[$k]][$i_zero]['time']/3600) : 0;
-		$minutes=isset($stats[$years[$k]][$i_zero]['time']) ? (int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60) : 0;
-		$seconds=isset($stats[$years[$k]][$i_zero]['time']) ? (int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60) : 0;
-		$time_readable=$hours. "h ". $minutes . "m " . $seconds . "s";
-		if($time_readable=="0h 0m 0s") $time_readable="";
-		$stat.="<td>";
-		$stat.=isset($stats[$years[$k]][$i_zero]['distance']) ? ($stats[$years[$k]][$i_zero]['distance'] . " km") : "";
-		$stat.="</td><td>" . $time_readable . "</td>";
+		if(isset($stats[$years[$k]][$i_zero]['time']) && $stats[$years[$k]][$i_zero]['time']!=0) {
+			$hours=(int)($stats[$years[$k]][$i_zero]['time']/3600);
+			$minutes=(int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60);
+			$seconds=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
+			$stat.="<td>";
+			$stat.=sprintf("%06.2f",$stats[$years[$k]][$i_zero]['distance']) . " km";
+			$stat.="</td><td>" . timeReadable($hours, $minutes, $seconds) . "</td>";
+		}
+		else {
+			$stat.="<td></td><td></td>";
+		}
 	}
-	$stat.="</tr>\n";
-	if($empty==1) $stat="";
 	echo $stat;
 }
 
