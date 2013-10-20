@@ -164,7 +164,7 @@ echo "<div id=\"calendar\">
 for($i=0; $i>-4; $i--) {
 	echo "<th colspan=\"7\">" . $i . "</th>";
 }
-echo "</tr>\n";
+echo "</tr>\n<tr>";
 for($i=28; $i; $i--) {
 	echo "<th>" . $daysOfWeek[($i+$dayOfWeek)%7] ."</th>";
 	$wasTrip[$i-1]=0;
