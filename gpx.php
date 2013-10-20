@@ -173,6 +173,7 @@ echo "</tr>\n";
 $endDate=date('Ymd', strtotime("-28 day"));
 $i=0;
 while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'))>=$endDate) {
+	$date=substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'));
 	$diff=(strtotime($today)-strtotime($date))/(60*60*24);
 	$wasTrip[$diff]=1;
 	$i++;
