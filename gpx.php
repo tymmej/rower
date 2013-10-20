@@ -161,6 +161,10 @@ $dayOfWeek=date('N');
 $today=date('Ymd');
 echo "<div id=\"calendar\">
 <table><tr>";
+for($i=0; $i>-4; $i--) {
+	echo "<th colspan=\"7\">" . $i . "</th>";
+}
+echo "</tr>\n";
 for($i=28; $i; $i--) {
 	echo "<th>" . $daysOfWeek[($i+$dayOfWeek)%7] ."</th>";
 	$wasTrip[$i-1]=0;
@@ -177,7 +181,7 @@ while(TRUE) {
 	else {
 		break;
 	}
-	++$i;
+	$i++;
 }
 echo "<tr>";
 for($i=0; $i<28; $i++) {
