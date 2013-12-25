@@ -71,6 +71,13 @@ td {
 	margin-top: 20px;
 }
 
+#podsumowanie {
+	width: 1220px;
+	border:#ccc 1px solid;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+
 .col {
 	float: left;
 	width: 410px;

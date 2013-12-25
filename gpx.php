@@ -17,6 +17,13 @@ Opis: <input name="desc" type="text" />
 </form>
 </div>
 
+<div id="podsumowanie">
+<form action="gpx-gmaps-all.php" method="post">
+Okres: <input name="files" type="text" />
+<input type="submit" value="Pokaż" />
+</form>
+</div>
+
 <?php
 
 function timeReadable($hours, $minutes, $seconds) {
