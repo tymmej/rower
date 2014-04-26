@@ -1,5 +1,7 @@
 <?php
 
+include 'key.php';
+
 $base_path=getcwd();
 $data_path="users";
 
@@ -200,9 +202,9 @@ if($status){
 		}
 		$i++;
 	}
-	$url="http://maps.googleapis.com/maps/api/staticmap?sensor=false&size=640x320&path=weight:3|color:rend|enc:";
+	$url="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=640x320&path=weight:3|color:rend|enc:";
 	$url.=$enc;
-	$urlmini="http://maps.googleapis.com/maps/api/staticmap?sensor=false&size=250x125&path=weight:3|color:rend|enc:";
+	$urlmini="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 	$urlmini.=$enc;
 	$imagename=str_replace('.gpx', '', $filename);
 	$img = $base_path . '/' . $data_path . '/' . $user . '/maps/'. $imagename . '.png';
