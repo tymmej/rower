@@ -12,4 +12,5 @@ do
 	DESC=`grep \<name\> $FILE | sed -e 's/<trk><name>//' -e 's/<\/name>//' -e 's/\s//'`
 	FILE=`echo $FILE | sed -e 's/users\/tymmej\/gpx\///'`
 	php process.php $FILE "$DESC"
+	sleep 4
 done

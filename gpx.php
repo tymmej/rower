@@ -109,8 +109,25 @@ foreach($trips as $trip) {
 	$stats[$year][$month]['time']+=$trip['seconds'];
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
-	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\"><a href=\"gpx-gmaps.html?file=" . $trip['date'] . "\">"  . $trip['desc'] . "</a> <a href=\"gpx-osm.html?file=" . $trip['date'] . "\">" . $trip['date'] . "</a></th>\n\t</tr>\n";
-	$table[$i].="\t<tr>\n\t\t<td>". $trip['dist'] . "km" ."</td>\n\t\t<td>" . $trip['time_readable'] . "</td>\n\t\t<td>" . $trip['avg'] . "km/h" . "</td>\n\t\t<td><a href=\"maps/". $trip['map'] . "\"><img width=\"250px\" heigth=\"125\" src=\"maps/mini-". $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" /></a></td>\n\t</tr>\n";
+	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\">
+		<a href=\"gpx-gmaps.html?file=". $trip['date'] . "\">" 
+		. $trip['desc'] .
+		"</a>
+		<a href=\"gpx-osm.html?file=" . $trip['date'] . "\">"
+		. $trip['date'] .
+		"</a>
+		</th>\n\t</tr>\n";
+	$table[$i].="\t<tr>\n\t\t<td>".
+		$trip['dist'] . "km" .
+		"</td>\n\t\t<td>"
+		. $trip['time_readable'] .
+		"</td>\n\t\t<td>"
+		. $trip['avg'] . "km/h" .
+		"</td>\n\t\t<td>
+		<a href=\"". $data_path . "/" . $user . "/maps/" . $trip['map'] . "\">
+			<img width=\"250px\" heigth=\"125\" src=\"" . $data_path . "/" . $user . "/maps/mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
+		</a>
+		</td>\n\t</tr>\n";
 	$i=++$i%3;
 }
 

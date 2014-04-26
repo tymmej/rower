@@ -319,7 +319,7 @@ $files=array_diff(scandir("gpx/"), array("..", "."));
 $len=strlen($_POST["files"]);
 foreach ($files as $key => $value) {
 	if (substr($value, 0, $len) == $_POST["files"]) {
-		echo "loadGPXFileIntoGoogleMap(map, \"gpx/" . $value . "\");"."\n";
+		echo "loadGPXFileIntoGoogleMap(map, \"users/tymmej/gpx/" . $value . "\");"."\n";
 	}
 }
 

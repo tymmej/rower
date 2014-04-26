@@ -208,7 +208,7 @@ if($status){
 	$urlmini.=$enc;
 	$imagename=str_replace('.gpx', '', $filename);
 	$img = $base_path . '/' . $data_path . '/' . $user . '/maps/'. $imagename . '.png';
-	$imgmini = $base_path . '/' . $data_path . '/' . $user . '/maps/mini-' . $imagename. ' .png';
+	$imgmini = $base_path . '/' . $data_path . '/' . $user . '/maps/mini-' . $imagename. '.png';
 	file_put_contents($img, file_get_contents($url));
 	file_put_contents($imgmini, file_get_contents($urlmini));
 }

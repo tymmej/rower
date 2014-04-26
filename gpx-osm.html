@@ -60,7 +60,7 @@
 			var lgpx = new OpenLayers.Layer.Vector("Track", {
 				strategies: [new OpenLayers.Strategy.Fixed()],
 				protocol: new OpenLayers.Protocol.HTTP({
-					url: "gpx/" + params.file + ".gpx",
+					url: "users/tymmej/gpx/" + params.file + ".gpx",
 					format: new OpenLayers.Format.GPX()
 				}),
 				style: {strokeColor: "red", strokeWidth: 5, strokeOpacity: 0.5},
