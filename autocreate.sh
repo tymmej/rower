@@ -6,10 +6,10 @@ cd $BASE_PATH
 cp example/gpx.json.empty gpx.json
 chown php:www-data gpx.json
 
-for FILE in gpx/*.gpx
+for FILE in users/tymmej/gpx/*.gpx
 do
 	echo $FILE
 	DESC=`grep \<name\> $FILE | sed -e 's/<trk><name>//' -e 's/<\/name>//' -e 's/\s//'`
-	FILE=`echo $FILE | sed -e 's/gpx\///'`
+	FILE=`echo $FILE | sed -e 's/users\/tymmej\/gpx\///'`
 	php process.php $FILE "$DESC"
 done
