@@ -90,7 +90,7 @@ $file=$base_path . '/' . $data_path . '/' . $user . '/gpx/' . $filename;
 
 //move file to tmp folder
 if($mode==1){
-	$uploadfile=$base_path . "tmp/" . $filename;
+	$uploadfile=$base_path . "/tmp/" . $filename;
 	if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 		//check if file valid by using xml checks
 		$xml=XMLReader::open($uploadfile);
