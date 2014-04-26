@@ -1,6 +1,9 @@
 <?php
 
-$base_path="/media/a1f63e22-1c18-4ff1-b63c-f4fcda0408eb/www/rower/";
+$base_path=getcwd();
+$data_path="users";
+
+$user="tymmej";
 
 function haversineDistance($curLat, $curLon, $prevLat, $prevLon) {
 	$earthMeanRadius=6371000;
@@ -81,7 +84,7 @@ else {
 	$mode=2;
 }
 
-$file=$base_path . "gpx/" . $filename;
+$file=$base_path . '/' . $data_path . '/gpx/' . $filename;
 
 //move file to tmp folder
 if($mode==1){
@@ -164,7 +167,7 @@ if($status){
 	array_push($json['trips'], $new_trip);
 
 	//write data
-	file_put_contents($base_path . "gpx.json", json_encode($json));
+	file_put_contents($base_path . '/' . $data_path . '/gpx.json', json_encode($json));
 
 	//create map as image
 	//https://gist.github.com/abarth500/1477057
@@ -202,8 +205,8 @@ if($status){
 	$urlmini="http://maps.googleapis.com/maps/api/staticmap?sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 	$urlmini.=$enc;
 	$imagename=str_replace('.gpx', '', $filename);
-	$img = $base_path.'maps/'.$imagename.'.png';
-	$imgmini = $base_path.'maps/mini-'.$imagename.'.png';
+	$img = $base_path . '/' . $data_path . '/maps/'. $imagename . '.png';
+	$imgmini = $base_path. '/' . $data_path . '/maps/mini-' . $imagename. ' .png';
 	file_put_contents($img, file_get_contents($url));
 	file_put_contents($imgmini, file_get_contents($urlmini));
 }

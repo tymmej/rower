@@ -6,7 +6,7 @@ OPTIONS="-a --delete --delete-excluded --password-file=/home/tymmej/documents/ro
 
 #which enabled, start at 0
 #look at paths()
-enabled=(1 1 1 1)
+enabled=(1 1)
 
 #get options from cli
 #before paths, becouse of $ADDRESS
@@ -34,16 +34,12 @@ Usage:
 done
 
 #local paths
-paths=("$ADDRESS::www/rower/gpx"
-	"$ADDRESS::www/rower/maps"
-	"$ADDRESS::www/rower/gpx.json"
+paths=("$ADDRESS::www/rower/users"
 	"/home/tymmej/documents/rower"
 )
 
 #dest paths
 rpaths=("/home/tymmej/documents/rower"
-	"/home/tymmej/documents/rower"
-	"/home/tymmej/documents/rower"
 	"$ADDRESS::www"
 )
 

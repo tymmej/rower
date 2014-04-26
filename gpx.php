@@ -26,6 +26,9 @@ Okres: <input name="files" type="text" />
 
 <?php
 
+$data_path="users";
+$user="tymmej";
+
 function timeReadable($hours, $minutes, $seconds) {
 	return sprintf("%02d", $hours) . "h " . sprintf("%02d", $minutes) . "m " . sprintf("%02d", $seconds) . "s";
 }
@@ -35,7 +38,7 @@ function timeReadableTrip($hours, $minutes, $seconds) {
 }
 
 //read json
-$file=file_get_contents('gpx.json');
+$file=file_get_contents($data_path.'/'.$user.'/gpx.json');
 $json=json_decode($file, true);
 
 //create own array
@@ -65,7 +68,7 @@ foreach ($trips as $trip) {
 array_multisort($trips, SORT_DESC, $dates);
 
 //read serwis
-$file=file_get_contents('serwis.json');
+$file=file_get_contents($data_path.'/'.$user.'/serwis.json');
 $json=json_decode($file, true);
 
 $i=0;

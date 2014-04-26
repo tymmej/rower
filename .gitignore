@@ -1,8 +1,8 @@
-gpx.json
-serwis.json
 pass
-gpx/*
-inne/*
-maps/*
-szlaki/*
+users/tymmej/gpx/*
+users/tymmej/inne/*
+users/tymmej/maps/*
+users/tymmej/szlaki/*
+users/tymmej/gpx.json
+users/tymmej/serwis.json
 tmp/*
