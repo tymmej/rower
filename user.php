@@ -266,6 +266,8 @@
 		 */
 		function register(&$registration_callback=false)
 		{
+			//disable register
+			return false;
 			// get relevant values
 			$username = $_POST["username"];
 			$email = $_POST["email"];
