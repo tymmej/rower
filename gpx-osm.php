@@ -1,17 +1,29 @@
-<html>
+<?php
+
+require_once("user.php");
+$USER = new User("registration_callback");
+
+$file_name = basename($_GET['filename']);
+$ext = pathinfo($file_name, PATHINFO_EXTENSION);
+
+$data_path="users";
+$user=$_SESSION["username"];
+
+if($USER->authenticated) {
+echo "<html>
 <head>
 	<!-- Source: http://wiki.openstreetmap.org/wiki/Openlayers_Track_example -->
 	<title>Mapka OSM</title>
 	<!-- bring in the OpenLayers javascript library
 		 (here we bring it from the remote site, but you could
 		 easily serve up this javascript yourself) -->
-	<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+	<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>
 	<!-- bring in the OpenStreetMap OpenLayers layers.
 		 Using this hosted file will make sure we are kept up
 		 to date with any necessary changes -->
-	<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+	<script src=\"http://www.openstreetmap.org/openlayers/OpenStreetMap.js\"></script>
  
-	<script type="text/javascript">
+	<script type=\"text/javascript\">
 		// Start position for the map (hardcoded here for simplicity,
 		// but maybe you want to get this from the URL params)
 		var lat=51.15
@@ -20,7 +32,7 @@
  
 		var map; //complex object of type OpenLayers.Map
 
-		qs = document.location.search.split("+").join(" ");
+		qs = document.location.search.split(\"+\").join(\" \");
 
 		var params = {}, tokens,
 			re = /[?&]?([^=]+)=([^&]*)/g;
@@ -30,10 +42,10 @@
 				= decodeURIComponent(tokens[2]);
 		}
 
-		document.title = "Mapka OSM " + params.file;
+		document.title = \"Mapka OSM \" + params.file;
 
 		function init() {
-			map = new OpenLayers.Map ("map", {
+			map = new OpenLayers.Map (\"map\", {
 				controls:[
 					new OpenLayers.Control.Navigation(),
 					new OpenLayers.Control.PanZoomBar(),
@@ -43,32 +55,32 @@
 				maxResolution: 156543.0399,
 				numZoomLevels: 19,
 				units: 'm',
-				projection: new OpenLayers.Projection("EPSG:900913"),
-				displayProjection: new OpenLayers.Projection("EPSG:4326")
+				projection: new OpenLayers.Projection(\"EPSG:900913\"),
+				displayProjection: new OpenLayers.Projection(\"EPSG:4326\")
 			} );
  
 			// Define the map layer
 			// Here we use a predefined layer that will be kept up to date with URL changes
-			layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+			layerMapnik = new OpenLayers.Layer.OSM.Mapnik(\"Mapnik\");
 			map.addLayer(layerMapnik);
-//			layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+//			layerCycleMap = new OpenLayers.Layer.OSM.CycleMap(\"CycleMap\");
 //			map.addLayer(layerCycleMap);
-//			layerMarkers = new OpenLayers.Layer.Markers("Markers");
+//			layerMarkers = new OpenLayers.Layer.Markers(\"Markers\");
 //			map.addLayer(layerMarkers);
  
 			// Add the Layer with the GPX Track
-			var lgpx = new OpenLayers.Layer.Vector("Track", {
+			var lgpx = new OpenLayers.Layer.Vector(\"Track\", {
 				strategies: [new OpenLayers.Strategy.Fixed()],
 				protocol: new OpenLayers.Protocol.HTTP({
-					url: "users/tymmej/gpx/" + params.file + ".gpx",
+					url: \"download.php?filename=\" + params.file + \".gpx\",
 					format: new OpenLayers.Format.GPX()
 				}),
-				style: {strokeColor: "red", strokeWidth: 5, strokeOpacity: 0.5},
-				projection: new OpenLayers.Projection("EPSG:4326")
+				style: {strokeColor: \"red\", strokeWidth: 5, strokeOpacity: 0.5},
+				projection: new OpenLayers.Projection(\"EPSG:4326\")
 			});
 			map.addLayer(lgpx);
  
-			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection(\"EPSG:4326\"), map.getProjectionObject());
 			map.setCenter(lonLat, zoom);
  
 			var size = new OpenLayers.Size(21, 25);
@@ -80,8 +92,10 @@
  
 </head>
 <!-- body.onload is called once the page is loaded (call the 'init' function) -->
-<body onload="init();">
+<body onload=\"init();\">
 	<!-- define a DIV into which the map will appear. Make it take up the whole window -->
-	<div style="width:100%; height:100%" id="map"></div>
+	<div style=\"width:100%; height:100%\" id=\"map\"></div>
 </body>
-</html>
+</html>";
+}
+?>

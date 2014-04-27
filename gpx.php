@@ -1,33 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Rower</title>
-	<link rel="stylesheet" href="gpx.css" />
-</head>
-<body>
-<div id="container">
-
-<div id="upload">
-<form enctype="multipart/form-data" action="process.php" method="post">
-Opis: <input name="desc" type="text" />
-<input name="gpx"  type="file" />
-<input type="submit" value="Dodaj" />
-</form>
-</div>
-
-<div id="podsumowanie">
-<form action="gpx-gmaps-all.php" method="post">
-Okres: <input name="files" type="text" />
-<input type="submit" value="Pokaż" />
-</form>
-</div>
-
 <?php
 
-$data_path="users";
-$user="tymmej";
+$data = false;
+
+// this is a demonstrator function, which gets called when new users register
+function registration_callback($username, $email, $userdir)
+{
+	// all it does is bind registration data in a global array,
+	// which is echoed on the page after a registration
+	global $data;
+	$data = array($username, $email, $userdir);
+}
+
+require_once("user.php");
+$USER = new User("registration_callback");
+
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
+\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+
+<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<head>
+	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
+	<script type=\"text/javascript\" src=\"js/sha1.js\"></script>
+	<script type=\"text/javascript\" src=\"js/user.js\"></script>
+	<title>Rower</title>
+	<link rel=\"stylesheet\" href=\"gpx.css\" />
+</head>
+<body>";
+
 
 function timeReadable($hours, $minutes, $seconds) {
 	return sprintf("%02d", $hours) . "h " . sprintf("%02d", $minutes) . "m " . sprintf("%02d", $seconds) . "s";
@@ -36,6 +35,60 @@ function timeReadable($hours, $minutes, $seconds) {
 function timeReadableTrip($hours, $minutes, $seconds) {
 	return sprintf("%01d", $hours) . "h " . sprintf("%02d", $minutes) . "m " . sprintf("%02d", $seconds) . "s";
 }
+
+
+echo "<div id=\"container\">";
+
+if(!$USER->authenticated) {
+	echo "<div id=\"register\"><form id=\"formregistration\" class=\"controlbox\" name=\"new user registration\" action=\"gpx.php\" method=\"post\">
+		<input type=\"hidden\" name=\"op\" value=\"register\"/>
+		<input type=\"hidden\" name=\"sha1\" value=\"\"/>
+		<table>
+			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" /></td></tr>
+			<tr><td>E-mail </td><td><input type=\"text\" name=\"email\" value=\"\" /></td></tr>
+			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" /></td></tr>
+			<tr><td>Hasło (powtórz) </td><td><input type=\"password\" name=\"password2\" value=\"\" /></td></tr>
+		</table>
+		<input type=\"button\" value=\"Zarejestruj\" onclick=\"User.processRegistration()\"/>
+	</form>
+	</div>
+	<div id=\"login\"><form id=\"formlogin\" class=\"controlbox\" name=\"log in\" action=\"gpx.php\" method=\"post\">
+		<input type=\"hidden\" name=\"op\" value=\"login\"/>
+		<input type=\"hidden\" name=\"sha1\" value=\"\"/>
+		<table>
+			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" /></td></tr>
+			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" /></td></tr>
+		</table>
+		<input type=\"button\" value=\"Zaloguj\" onclick=\"User.processLogin()\"/>
+		</form></div>";
+}
+
+if($USER->authenticated) {
+$data_path="users";
+$user=$_SESSION["username"];
+
+echo "<div id=\"logout\">
+<form id=\"formlogout\" name=\"log out\" action=\"gpx.php\" method=\"post\">
+<input type=\"hidden\" name=\"op\" value=\"logout\"/>
+<input type=\"hidden\" name=\"username\"value=\"" . $_SESSION["username"] ."\" />
+Zalogowany jako " . $_SESSION["username"] . "
+<input type=\"submit\" value=\"Wyloguj\"/>
+</form>
+</div>
+<div id=\"upload\">
+<form enctype=\"multipart/form-data\" action=\"process.php\" method=\"post\">
+Opis: <input name=\"desc\" type=\"text\" />
+<input name=\"gpx\"  type=\"file\" />
+<input type=\"submit\" value=\"Dodaj\" />
+</form>
+</div>
+
+<div id=\"podsumowanie\">
+<form action=\"gpx-gmaps-all.php\" method=\"post\">
+Okres: <input name=\"files\" type=\"text\" />
+<input type=\"submit\" value=\"Pokaż\" />
+</form>
+</div>";
 
 //read json
 $file=file_get_contents($data_path.'/'.$user.'/gpx.json');
@@ -110,10 +163,10 @@ foreach($trips as $trip) {
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
 	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\">
-		<a href=\"gpx-gmaps.html?file=". $trip['date'] . "\">" 
+		<a href=\"gpx-gmaps.php?file=". $trip['date'] . "\">" 
 		. $trip['desc'] .
 		"</a>
-		<a href=\"gpx-osm.html?file=" . $trip['date'] . "\">"
+		<a href=\"gpx-osm.php?file=" . $trip['date'] . "\">"
 		. $trip['date'] .
 		"</a>
 		</th>\n\t</tr>\n";
@@ -124,8 +177,8 @@ foreach($trips as $trip) {
 		"</td>\n\t\t<td>"
 		. $trip['avg'] . "km/h" .
 		"</td>\n\t\t<td>
-		<a href=\"". $data_path . "/" . $user . "/maps/" . $trip['map'] . "\">
-			<img width=\"250px\" heigth=\"125\" src=\"" . $data_path . "/" . $user . "/maps/mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
+		<a href=\"download.php?filename=" . $trip['map'] . "\">
+			<img width=\"250px\" heigth=\"125\" src=\"download.php?filename=mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
 		</a>
 		</td>\n\t</tr>\n";
 	$i=++$i%3;
@@ -228,8 +281,10 @@ for($i=0; $i<3; $i++) {
 	echo "</table>\n</div>";
 }
 
-?>
-
-</div>
+//end of main script
+}
+echo "</div>
 </body>
-</html>
+</html>";
+
+?>

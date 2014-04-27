@@ -2,10 +2,16 @@
 
 include 'key.php';
 
+require_once("user.php");
+$USER = new User("registration_callback");
+
+if($USER->authenticated) {
+
+//main part of script
+
 $base_path=getcwd();
 $data_path="users";
-
-$user="tymmej";
+$user=$_SESSION["username"];
 
 function haversineDistance($curLat, $curLon, $prevLat, $prevLon) {
 	$earthMeanRadius=6371000;
@@ -240,5 +246,6 @@ if($mode==1) {
 
 	echo "</body>
 </html>";
+}
 }
 ?>

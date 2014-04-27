@@ -1,26 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<?php
+
+require_once("user.php");
+$USER = new User("registration_callback");
+
+$file_name = basename($_GET['filename']);
+$ext = pathinfo($file_name, PATHINFO_EXTENSION);
+
+$data_path="users";
+$user=$_SESSION["username"];
+
+if($USER->authenticated) {
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"/>
         <title>Mapka Google</title>
-        <style type="text/css">
+        <style type=\"text/css\">
             v\:* {
                 behavior:url(#default#VML);
             }
         </style>
 
         <!-- Make the document body take up the full screen -->
-        <style type="text/css">
+        <style type=\"text/css\">
             html, body {width: 100%; height: 100%}
             body {margin-top: 0px; margin-right: 0px; margin-left: 0px; margin-bottom: 0px}
         </style>
-        <script type="text/javascript"
-            src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
+        <script type=\"text/javascript\"
+            src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\">
         </script>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-        <script src="loadgpx.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            //<![CDATA[
+        <script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>
+        <script src=\"loadgpx.js\" type=\"text/javascript\"></script>
+        <script type=\"text/javascript\">
 ///////////////////////////////////////////////////////////////////////////////
 // loadgpx.4.js
 //
@@ -73,7 +84,7 @@
 function GPXParser(xmlDoc, map) {
     this.xmlDoc = xmlDoc;
     this.map = map;
-    this.trackcolour = "#ff00ff"; // red
+    this.trackcolour = \"#ff00ff\"; // red
     this.trackwidth = 5;
     this.mintrackpointdelta = 0.0001
 }
@@ -95,21 +106,21 @@ GPXParser.prototype.setMinTrackPointDelta = function(delta) {
 }
 
 GPXParser.prototype.translateName = function(name) {
-    if(name == "wpt") {
-        return "Waypoint";
+    if(name == \"wpt\") {
+        return \"Waypoint\";
     }
-    else if(name == "trkpt") {
-        return "Track Point";
+    else if(name == \"trkpt\") {
+        return \"Track Point\";
     }
 }
 
 
 GPXParser.prototype.createMarker = function(point) {
-    var lon = parseFloat(point.getAttribute("lon"));
-    var lat = parseFloat(point.getAttribute("lat"));
-    var html = "";
+    var lon = parseFloat(point.getAttribute(\"lon\"));
+    var lat = parseFloat(point.getAttribute(\"lat\"));
+    var html = \"\";
 
-    var pointElements = point.getElementsByTagName("html");
+    var pointElements = point.getElementsByTagName(\"html\");
     if(pointElements.length > 0) {
         for(i = 0; i < pointElements.item(0).childNodes.length; i++) {
             html += pointElements.item(0).childNodes[i].nodeValue;
@@ -117,12 +128,12 @@ GPXParser.prototype.createMarker = function(point) {
     }
     else {
         // Create the html if it does not exist in the point.
-        html = "<b>" + this.translateName(point.nodeName) + "</b><br>";
+        html = \"<b>\" + this.translateName(point.nodeName) + \"</b><br>\";
         var attributes = point.attributes;
         var attrlen = attributes.length;
         for(i = 0; i < attrlen; i++) {
-            html += attributes.item(i).name + " = " +
-                    attributes.item(i).nodeValue + "<br>";
+            html += attributes.item(i).name + \" = \" +
+                    attributes.item(i).nodeValue + \"<br>\";
         }
 
         if(point.hasChildNodes) {
@@ -132,8 +143,8 @@ GPXParser.prototype.createMarker = function(point) {
                 // Ignore empty nodes
                 if(children[i].nodeType != 1) continue;
                 if(children[i].firstChild == null) continue;
-                html += children[i].nodeName + " = " +
-                        children[i].firstChild.nodeValue + "<br>";
+                html += children[i].nodeName + \" = \" +
+                        children[i].firstChild.nodeValue + \"<br>\";
             }
         }
     }
@@ -148,14 +159,14 @@ GPXParser.prototype.createMarker = function(point) {
         size: new google.maps.Size(50,50)
     });
 
-    google.maps.event.addListener(marker, "click", function() {
+    google.maps.event.addListener(marker, \"click\", function() {
         infowindow.open(this.map, marker);
     });
 }
 
 GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
         width) {
-    var trackpoints = trackSegment.getElementsByTagName("trkpt");
+    var trackpoints = trackSegment.getElementsByTagName(\"trkpt\");
     if(trackpoints.length == 0) {
         return;
     }
@@ -163,14 +174,14 @@ GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
     var pointarray = [];
 
     // process first point
-    var lastlon = parseFloat(trackpoints[0].getAttribute("lon"));
-    var lastlat = parseFloat(trackpoints[0].getAttribute("lat"));
+    var lastlon = parseFloat(trackpoints[0].getAttribute(\"lon\"));
+    var lastlat = parseFloat(trackpoints[0].getAttribute(\"lat\"));
     var latlng = new google.maps.LatLng(lastlat,lastlon);
     pointarray.push(latlng);
 
     for(var i = 1; i < trackpoints.length; i++) {
-        var lon = parseFloat(trackpoints[i].getAttribute("lon"));
-        var lat = parseFloat(trackpoints[i].getAttribute("lat"));
+        var lon = parseFloat(trackpoints[i].getAttribute(\"lon\"));
+        var lat = parseFloat(trackpoints[i].getAttribute(\"lat\"));
 
         // Verify that this is far enough away from the last point to be used.
         var latdiff = lat - lastlat;
@@ -194,7 +205,7 @@ GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
 }
 
 GPXParser.prototype.addTrackToMap = function(track, colour, width) {
-    var segments = track.getElementsByTagName("trkseg");
+    var segments = track.getElementsByTagName(\"trkseg\");
     for(var i = 0; i < segments.length; i++) {
         var segmentlatlngbounds = this.addTrackSegmentToMap(segments[i], colour,
                 width);
@@ -203,7 +214,7 @@ GPXParser.prototype.addTrackToMap = function(track, colour, width) {
 
 GPXParser.prototype.centerAndZoom = function(trackSegment) {
 
-    var pointlist = new Array("trkpt", "wpt");
+    var pointlist = new Array(\"trkpt\", \"wpt\");
     var minlat = 0;
     var maxlat = 0;
     var minlon = 0;
@@ -217,15 +228,15 @@ GPXParser.prototype.centerAndZoom = function(trackSegment) {
 
         // If the min and max are uninitialized then initialize them.
         if((trackpoints.length > 0) && (minlat == maxlat) && (minlat == 0)) {
-            minlat = parseFloat(trackpoints[0].getAttribute("lat"));
-            maxlat = parseFloat(trackpoints[0].getAttribute("lat"));
-            minlon = parseFloat(trackpoints[0].getAttribute("lon"));
-            maxlon = parseFloat(trackpoints[0].getAttribute("lon"));
+            minlat = parseFloat(trackpoints[0].getAttribute(\"lat\"));
+            maxlat = parseFloat(trackpoints[0].getAttribute(\"lat\"));
+            minlon = parseFloat(trackpoints[0].getAttribute(\"lon\"));
+            maxlon = parseFloat(trackpoints[0].getAttribute(\"lon\"));
         }
 
         for(var i = 0; i < trackpoints.length; i++) {
-            var lon = parseFloat(trackpoints[i].getAttribute("lon"));
-            var lat = parseFloat(trackpoints[i].getAttribute("lat"));
+            var lon = parseFloat(trackpoints[i].getAttribute(\"lon\"));
+            var lat = parseFloat(trackpoints[i].getAttribute(\"lat\"));
 
             if(lon < minlon) minlon = lon;
             if(lon > maxlon) maxlon = lon;
@@ -268,14 +279,14 @@ GPXParser.prototype.centerAndZoomToLatLngBounds = function(latlngboundsarray) {
 }
 
 GPXParser.prototype.addTrackpointsToMap = function() {
-    var tracks = this.xmlDoc.documentElement.getElementsByTagName("trk");
+    var tracks = this.xmlDoc.documentElement.getElementsByTagName(\"trk\");
     for(var i = 0; i < tracks.length; i++) {
         this.addTrackToMap(tracks[i], this.trackcolour, this.trackwidth);
     }
 }
 
 GPXParser.prototype.addWaypointsToMap = function() {
-    var waypoints = this.xmlDoc.documentElement.getElementsByTagName("wpt");
+    var waypoints = this.xmlDoc.documentElement.getElementsByTagName(\"wpt\");
     for(var i = 0; i < waypoints.length; i++) {
         this.createMarker(waypoints[i]);
     }
@@ -283,10 +294,10 @@ GPXParser.prototype.addWaypointsToMap = function() {
 
             function loadGPXFileIntoGoogleMap(map, filename) {
                 $.ajax({url: filename,
-                    dataType: "xml",
+                    dataType: \"xml\",
                     success: function(data) {
                       var parser = new GPXParser(data, map);
-                      parser.setTrackColour("#ff0000"); // Set the track line colour
+                      parser.setTrackColour(\"#ff0000\"); // Set the track line colour
                       parser.setTrackWidth(5); // Set the track line width
                       parser.setMinTrackPointDelta(0.0001); // Set the minimum distance between track points
                       parser.centerAndZoom(data);
@@ -297,7 +308,7 @@ GPXParser.prototype.addWaypointsToMap = function() {
             }
 
             $(document).ready(function() {
-					qs = document.location.search.split("+").join(" ");
+					qs = document.location.search.split(\"+\").join(\" \");
 
 var params = {}, tokens,
 re = /[?&]?([^=]+)=([^&]*)/g;
@@ -310,27 +321,26 @@ params[decodeURIComponent(tokens[1])]
                   zoom: 8,
                   mapTypeId: google.maps.MapTypeId.HYBRID
                 };
-                var map = new google.maps.Map(document.getElementById("map"),
-                    mapOptions);
-        //]]>
-<?php
-$files=array_diff(scandir("gpx/"), array("..", "."));
+                var map = new google.maps.Map(document.getElementById(\"map\"),
+                    mapOptions);";
+                    
+$files=array_diff(scandir($data_path . "/" . $user . "/gpx/"), array("..", "."));
 
 $len=strlen($_POST["files"]);
 foreach ($files as $key => $value) {
 	if (substr($value, 0, $len) == $_POST["files"]) {
-		echo "loadGPXFileIntoGoogleMap(map, \"users/tymmej/gpx/" . $value . "\");"."\n";
+		echo "loadGPXFileIntoGoogleMap(map, \"download.php?filename=" . $value . "\");"."\n";
 	}
 }
 
-echo                "document.title = \"Mapka Google " .  $_POST["files"]."\"\n";
-?>
+echo                "document.title = \"Mapka Google " .  $_POST["files"]."\"\n
                 });
 
 </script>
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 100%;"></div>
+    <div id=\"map\" style=\"width: 100%; height: 100%;\"></div>
 </body>
-</html>
-
+</html>";
+}
+?>
