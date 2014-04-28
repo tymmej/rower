@@ -56,8 +56,8 @@ if(!$USER->authenticated) {
 		<input type=\"hidden\" name=\"op\" value=\"login\"/>
 		<input type=\"hidden\" name=\"sha1\" value=\"\"/>
 		<table>
-			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" autocapitalize=\"off\" /></td></tr>
-			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" autocapitalize=\"off\" /></td></tr>
+			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" autocapitalize=\"off\" autocorrect=\"off\" /></td></tr>
+			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" autocapitalize=\"off\" autocorrect=\"off\" /></td></tr>
 		</table>
 		<input type=\"button\" value=\"Zaloguj\" onclick=\"User.processLogin()\"/>
 		</form></div>";
