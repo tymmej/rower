@@ -23,6 +23,7 @@ blockquote:before, blockquote:after, q:before, q:after { content: ''; content: n
 :focus { outline: 0; }
 del { text-decoration: line-through; }
 table {border-spacing: 0; } /* IMPORTANT, I REMOVED border-collapse: collapse; FROM THIS LINE IN ORDER TO MAKE THE OUTER BORDER RADIUS WORK */
+
 /*This is not important*/
 body{
 	font-family:Arial, Helvetica, sans-serif;
@@ -30,7 +31,7 @@ body{
 	font-size:12px;
 	text-shadow: 1px 1px 0px #fff;
 	background:#f1f2f3;
-	width: 1500px;
+	width: 90%;
 	margin: 0 auto;
 }
 
@@ -42,21 +43,6 @@ td {
 	vertical-align: middle;
 }
 
-#container {
-}
-
-#stats {
-	width: 1448px;
-}
-
-#serwis {
-	width: 1448px;
-}
-
-#calendar {
-	width: 1448px;
-}
-
 .trip0 {
 }
 
@@ -65,15 +51,15 @@ td {
 }
 
 #logout, #login, #register, #podsumowanie, #upload {
-	width: 1420px;
 	border:#ccc 1px solid;
-	margin-left: 20px;
+	width: 100%;
 	margin-top: 20px;
 }
 
-.col {
-	float: left;
-	width: 473px;
+#stats, #serwis, #calendar {
+	overflow: auto;
+	width: 100%;
+	margin-top: 20px;
 }
 
 table {
@@ -82,10 +68,9 @@ table {
 	font-size:12px;
 	text-shadow: 1px 1px 0px #fff;
 	background:#eaebec;
-	margin:20px;
 	border:#ccc 1px solid;
 
-	width:98%;
+	width:100%;
 }
 
 table th {
@@ -97,7 +82,7 @@ table th {
 
 	background: #ededed;
 }
-
+	
 #stats table th:first-child{
 	text-align: left;
 	padding-left:2px;
@@ -132,4 +117,45 @@ table tr:hover td{
 
 table tr:hover .trip1 {
 	background: #ededed;
+}
+
+
+/*responsive min-width=455*/
+.grid .column:nth-of-type(3n+1) {
+	margin-left: 0;
+	clear: left;
+}
+
+.grid .column {
+	background: #eee;
+	float: left;
+	margin-left: 2%;
+	margin-bottom: 15px;
+	
+}
+
+.grid .column {
+	width: 32%;
+}
+
+@media screen and (max-width: 1566px) {
+	.grid .column {
+		width: 49%;
+	}
+	.grid .column:nth-of-type(3n+1) {
+		margin-left: 2%;
+		clear: none;
+	}
+	.grid .column:nth-of-type(2n+1) {
+		margin-left: 0;
+		clear: left;
+	}
+}
+
+@media screen and (max-width: 1010px) {
+	.grid .column {
+		width: 100% !important;
+		margin-left: 0 !important;
+		clear: none !important;
+	}
 }

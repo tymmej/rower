@@ -56,8 +56,8 @@ if(!$USER->authenticated) {
 		<input type=\"hidden\" name=\"op\" value=\"login\"/>
 		<input type=\"hidden\" name=\"sha1\" value=\"\"/>
 		<table>
-			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" /></td></tr>
-			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" /></td></tr>
+			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" autocapitalize=\"off\" /></td></tr>
+			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" autocapitalize=\"off\" /></td></tr>
 		</table>
 		<input type=\"button\" value=\"Zaloguj\" onclick=\"User.processLogin()\"/>
 		</form></div>";
@@ -68,9 +68,9 @@ $data_path="users";
 $user=$_SESSION["username"];
 
 echo "<div id=\"logout\">
-<form id=\"formlogout\" name=\"log out\" action=\"gpx.php\" method=\"post\">
+<form id=\"formlogout\" name=\"logout\" action=\"gpx.php\" method=\"post\">
 <input type=\"hidden\" name=\"op\" value=\"logout\"/>
-<input type=\"hidden\" name=\"username\"value=\"" . $_SESSION["username"] ."\" />
+<input type=\"hidden\" name=\"username\" value=\"" . $_SESSION["username"] ."\" />
 Zalogowany jako " . $_SESSION["username"] . "
 <input type=\"submit\" value=\"Wyloguj\"/>
 </form>
@@ -144,11 +144,11 @@ foreach($serwis as &$czesc) {
 }
 
 //create one trip stats and put data for monthly
-$table=array(0 => "", 1 => "", 2 => "");
+$table="";
 $stats=array();
 
 $i=0;
-
+$table.="<div class=\"grid\">";
 foreach($trips as $trip) {
 	$year=substr($trip['name'], 0, 4);
 	$month=substr($trip['name'], 4, 2);
@@ -162,7 +162,7 @@ foreach($trips as $trip) {
 	$stats[$year][$month]['time']+=$trip['seconds'];
 	$stats[$year]['distance']+=$trip['dist'];
 	$stats[$year]['time']+=$trip['seconds'];
-	$table[$i].="\t<tr>\n\t\t<th colspan=\"4\">
+	$table.="\t<div class=\"column\"><table><tr>\n\t\t<th colspan=\"4\">
 		<a href=\"gpx-gmaps.php?file=". $trip['date'] . "\">" 
 		. $trip['desc'] .
 		"</a>
@@ -170,7 +170,7 @@ foreach($trips as $trip) {
 		. $trip['date'] .
 		"</a>
 		</th>\n\t</tr>\n";
-	$table[$i].="\t<tr>\n\t\t<td>".
+	$table.="\t<tr>\n\t\t<td>".
 		$trip['dist'] . "km" .
 		"</td>\n\t\t<td>"
 		. $trip['time_readable'] .
@@ -178,65 +178,62 @@ foreach($trips as $trip) {
 		. $trip['avg'] . "km/h" .
 		"</td>\n\t\t<td>
 		<a href=\"download.php?filename=" . $trip['map'] . "\">
-			<img width=\"250px\" heigth=\"125\" src=\"download.php?filename=mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
+			<img width=\"250px\" height=\"125\" src=\"download.php?filename=mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
 		</a>
-		</td>\n\t</tr>\n";
-	$i=++$i%3;
+		</td>\n\t</tr></table></div>\n";
+	//$i=++$i%3;
 }
+$table.="</div>";
+
+
 
 //create monthly stats
 $i=0;
 $j=0;
-echo "<div id=\"stats\">\n<table>\n\t<tr><td></td>";
+//$months=array('', 'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień');
+$months=array('', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
+
+echo "<div id=\"stats\" class=\"grid\">";
 foreach($stats as $year => $stat) {
-	echo "<th colspan=\"2\">$year</th>";
-	$years[$j]=$year;
-	$j++;
-}
-echo "</tr>\n";
+	echo "<div class=\"column\"><table>\n\t<tr><td></td><th colspan=\"2\">$year</th>";
+	echo "</tr>\n\t<tr><td>Razem</td>";
 
-$months=array('', 'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień');
-
-echo "\t<tr><td>Razem</td>";
-
-for($k=0; $k<$j; $k++) {
-	$hours=(int)($stats[$years[$k]]['time']/3600);
-	$minutes=(int)(($stats[$years[$k]]['time']-$hours*3600)/60);
-	$seconds=(int)($stats[$years[$k]]['time']-$hours*3600-$minutes*60);
-	echo "<td>" . sprintf("%06.2f", $stats[$years[$k]]['distance']) . " km";
+	$hours=(int)($stat['time']/3600);
+	$minutes=(int)(($stat['time']-$hours*3600)/60);
+	$seconds=(int)($stat['time']-$hours*3600-$minutes*60);
+	echo "<td>" . sprintf("%06.2f", $stat['distance']) . " km";
 	echo "</td><td>" . timeReadable($hours, $minutes, $seconds) . "</td>";
-}
-echo "</tr>\n";
+	
+	echo "</tr>\n";
 
-//print stats
-for($i=12; $i>=1; $i--) {
-	$empty=1;
-	$stat="";
-	$stat.="\t<tr><td>" . $months[$i] . "</td>";
-	$i_zero=sprintf("%02d",$i);
-	for($k=0; $k<$j; $k++) {
-		if(isset($stats[$years[$k]][$i_zero]['time']) && $stats[$years[$k]][$i_zero]['time']!=0) {
+	//print stats
+	for($i=12; $i>=1; $i--) {
+		$empty=1;
+		$stats="";
+		$stats.="\t<tr><td>" . $months[$i] . "</td>";
+		$i_zero=sprintf("%02d",$i);
+		if(isset($stat[$i_zero]['time']) && $stat[$i_zero]['time']!=0) {
 			$empty=0;
-			$hours=(int)($stats[$years[$k]][$i_zero]['time']/3600);
-			$minutes=(int)(($stats[$years[$k]][$i_zero]['time']-$hours*3600)/60);
-			$seconds=(int)($stats[$years[$k]][$i_zero]['time']-$hours*3600-$minutes*60);
-			$stat.="<td>";
-			$stat.=sprintf("%06.2f",$stats[$years[$k]][$i_zero]['distance']) . " km";
-			$stat.="</td><td>" . timeReadable($hours, $minutes, $seconds) . "</td>";
+			$hours=(int)($stat[$i_zero]['time']/3600);
+			$minutes=(int)(($stat[$i_zero]['time']-$hours*3600)/60);
+			$seconds=(int)($stat[$i_zero]['time']-$hours*3600-$minutes*60);
+			$stats.="<td>";
+			$stats.=sprintf("%06.2f",$stat[$i_zero]['distance']) . " km";
+			$stats.="</td><td>" . timeReadable($hours, $minutes, $seconds) . "</td>";
 		}
 		else {
-			$stat.="<td></td><td></td>";
+			$stats.="<td></td><td></td>";
+		}
+		if(!$empty) {
+			echo $stats."</tr>";
 		}
 	}
-	if(!$empty) {
-		echo $stat;
-	}
+	echo "</table></div>";
 }
-
-echo "</table>\n</div>\n\n";
+echo "</div>\n\n";
 
 //serwis
-echo "<div id=\"serwis\">\n<table>\n";
+echo "<div id=\"serwis\" class=\"grid\">\n<table>\n";
 echo "<tr><th>Część</th><th>Przejechane</th><th>Co ile</th></tr>";
 foreach($serwis as $czesc) {
 	echo "<tr><td>" . $czesc['name'] . "</td><td>" . sprintf("%.2f", $czesc['driven']) . "</td><td>" . sprintf("%.2f", $czesc['dist']) . "</td></tr>";
@@ -247,18 +244,11 @@ echo "</table>\n</div>";
 $daysOfWeek=array("nd", "pn", "wt", "śr", "cz", "pt", "so");
 $dayOfWeek=date('N');
 $today=date('Ymd');
-echo "<div id=\"calendar\">
-<table><tr>";
-for($i=0; $i>-4; $i--) {
-	echo "<th colspan=\"7\">" . $i . "</th>";
-}
-echo "</tr>\n<tr>";
-for($i=28; $i; $i--) {
-	echo "<th>" . $daysOfWeek[($i+$dayOfWeek)%7] ."</th>";
+$weeks=6;
+for($i=$weeks*7; $i; $i--) {
 	$wasTrip[$i-1]=0;
 }
-echo "</tr>\n";
-$endDate=date('Ymd', strtotime("-28 day"));
+$endDate=date('Ymd', strtotime("-" . $weeks*7 . "day"));
 $i=0;
 while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'))>=$endDate) {
 	$date=substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'));
@@ -266,19 +256,24 @@ while(substr($trips[$i]['date'], 0, strpos($trips[$i]['date'],'.'))>=$endDate) {
 	$wasTrip[$diff]=1;
 	$i++;
 }
-echo "<tr>";
-for($i=0; $i<28; $i++) {
-	echo "<td class=\"trip" . $wasTrip[$i] . "\">".  date('d', strtotime(-$i . "day")) . "</td>";
+echo "<div id=\"calendar\" class=\"grid\">";
+for($i=0; $i>-$weeks; $i--) {
+	echo "<div class=\"column\"><table><tr><th colspan=\"7\">" . $i . "</th></tr><tr>";
+	for($j=7; $j; $j--) {
+		echo "<th>" . $daysOfWeek[($j+$dayOfWeek)%7] ."</th>";
+	}
+
+	echo "</tr><tr>";
+	for($j=$i*7; $j>($i-1)*7; $j--) {
+		echo "<td class=\"trip" . $wasTrip[-$j] . "\">".  date('d', strtotime($j . "day")) . "</td>";
+	}
+	echo "</tr></table></div>";
 }
-echo "</tr>
-</table>
-</div>";
+echo "</div>";
 
 //print tables
-for($i=0; $i<3; $i++) {
-	echo "<div class=\"col\">\n<table>\n";
-	echo $table[$i];
-	echo "</table>\n</div>";
+for($i=0; $i<1; $i++) {
+	echo $table;
 }
 
 //end of main script
