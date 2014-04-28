@@ -3,6 +3,8 @@
 require_once("user.php");
 $USER = new User("registration_callback");
 
+include 'key.php';
+
 $file_name = basename($_GET['filename']);
 $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 
@@ -27,9 +29,9 @@ echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3
             body {margin-top: 0px; margin-right: 0px; margin-left: 0px; margin-bottom: 0px}
         </style>
         <script type=\"text/javascript\"
-            src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\">
+            src=\"//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\">
         </script>
-        <script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>
+        <script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js?key=" . $key . "&sensor=false\"></script>
         <script src=\"loadgpx.js\" type=\"text/javascript\"></script>
         <script type=\"text/javascript\">
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,8 @@
 require_once("user.php");
 $USER = new User("registration_callback");
 
+include 'key.php';
+
 $file_name = basename($_GET['filename']);
 $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 
@@ -17,11 +19,12 @@ echo "<html>
 	<!-- bring in the OpenLayers javascript library
 		 (here we bring it from the remote site, but you could
 		 easily serve up this javascript yourself) -->
-	<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>
+	<!-- <script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script> -->
+	<script src=\"js/OpenLayers.js\"></script>
 	<!-- bring in the OpenStreetMap OpenLayers layers.
 		 Using this hosted file will make sure we are kept up
 		 to date with any necessary changes -->
-	<script src=\"http://www.openstreetmap.org/openlayers/OpenStreetMap.js\"></script>
+	<script src=\"//www.openstreetmap.org/openlayers/OpenStreetMap.js\"></script>
  
 	<script type=\"text/javascript\">
 		// Start position for the map (hardcoded here for simplicity,
