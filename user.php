@@ -398,6 +398,7 @@ EOT;
 		{
 			$_SESSION["username"]=$username;
 			$_SESSION["token"]=$token;
+			header("Location: " . $_SERVER['REQUEST_URI']);
 		}
 
 		// session management: reset session values
@@ -405,6 +406,7 @@ EOT;
 		{
 			$_SESSION["username"] = User::GUEST_USER;
 			$_SESSION["token"] = -1;
+			header("Location: " . $_SERVER['REQUEST_URI']);
 		}
 
 		/**
