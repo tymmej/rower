@@ -119,8 +119,6 @@ table tr:hover .trip1 {
 	background: #ededed;
 }
 
-
-/*responsive min-width=455*/
 .grid .column:nth-of-type(3n+1) {
 	margin-left: 0;
 	clear: left;
@@ -138,22 +136,61 @@ table tr:hover .trip1 {
 	width: 32%;
 }
 
-@media screen and (max-width: 1536px) {
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
 	.grid .column {
-		width: 49%;
+		width: 49% !important;
+		float: left !important;
 	}
 	.grid .column:nth-of-type(3n+1) {
-		margin-left: 2%;
-		clear: none;
+		margin-left: 2% !important;
+		clear: none !important;
 	}
 	.grid .column:nth-of-type(2n+1) {
-		margin-left: 0;
-		clear: left;
+		margin-left: 0 !important;
+		clear: left !important;
 	}
 }
 
-@media screen and (max-width: 1010px) {
+/* iPhone ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px),
+only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait){
+.grid .column {
+		width: 100% !important;
+		margin-left: 0 !important;
+		clear: none !important;
+	}
+}
+
+@media only screen 
+and (min-device-width : 1280px) 
+and (max-width: 1536px) {
 	.grid .column {
+		width: 49% !important;
+		float: left !important;
+	}
+	.grid .column:nth-of-type(3n+1) {
+		margin-left: 2% !important;
+		clear: none !important;
+	}
+	.grid .column:nth-of-type(2n+1) {
+		margin-left: 0 !important;
+		clear: left !important;
+	}
+}
+
+@media only screen 
+and (min-device-width : 1280px) 
+and (max-width: 1010px) {
+.grid .column {
 		width: 100% !important;
 		margin-left: 0 !important;
 		clear: none !important;
