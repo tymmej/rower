@@ -31,7 +31,7 @@ body{
 	font-size:12px;
 	text-shadow: 1px 1px 0px #fff;
 	background:#f1f2f3;
-	width: 90%;
+	width: 92%;
 	margin: 0 auto;
 }
 
@@ -138,7 +138,7 @@ table tr:hover .trip1 {
 	width: 32%;
 }
 
-@media screen and (max-width: 1566px) {
+@media screen and (max-width: 1536px) {
 	.grid .column {
 		width: 49%;
 	}
