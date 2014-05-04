@@ -1,10 +1,4 @@
 /pass
-users/*/gpx/*
-users/*/inne/*
-users/*/maps/*
-users/*/szlaki/*
-users/*/gpx.json
-users/*/serwis.json
-users/users.db
+users/*
 tmp/*
 /key.php
