@@ -1,7 +1,1 @@
 DirectoryIndex	gpx.php
-
-<Files users.db>
-Order Allow,Deny
-Deny from all
-</Files>
-
