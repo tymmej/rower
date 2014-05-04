@@ -13,6 +13,21 @@ $base_path=getcwd();
 $data_path="users";
 $user=$_SESSION["username"];
 
+if(isset($_POST['tryb'])){
+	if($_POST['tryb']=="gpx"){
+		$tryb="gpx";
+	}
+	else if($_POST['tryb']=="szlaki"){
+		$tryb="szlaki";
+	}
+	else if($_POST['tryb']=="inne"){
+		$tryb="inne";
+	}	
+}
+else{
+	$tryb="gpx";
+}
+
 function haversineDistance($curLat, $curLon, $prevLat, $prevLon) {
 	$earthMeanRadius=6371000;
 
@@ -92,7 +107,7 @@ else {
 	$mode=2;
 }
 
-$file=$base_path . '/' . $data_path . '/' . $user . '/gpx/' . $filename;
+$file=$base_path . '/' . $data_path . '/' . $user . '/' . $tryb . '/' . $filename;
 
 //move file to tmp folder
 if($mode==1){
@@ -160,7 +175,7 @@ if($status){
 	$distance=round($distance/1000, 2);
 
 	//read gpx.json
-	$text=file_get_contents($base_path . '/' . $data_path . '/' . $user . "/gpx.json");
+	$text=file_get_contents($base_path . '/' . $data_path . '/' . $user . "/" . $tryb .".json");
 	$json=json_decode($text, true);
 
 	//create new trip
@@ -168,14 +183,19 @@ if($status){
 	$new_trip['name']=$filename;
 	$new_trip['desc']=$desc;
 	$new_trip['dist']=$distance;
-	$new_trip['time']=floor($time/60) . ":" . $time%60;
+	if($tryb!="szlaki") {
+		$new_trip['time']=floor($time/60) . ":" . $time%60;
+	}
+	else {
+		$new_trip['time']=0;
+	}
 	$new_trip['tags']="";
 
 	//push to json
 	array_push($json['trips'], $new_trip);
 
 	//write data
-	file_put_contents($base_path . '/' . $data_path . '/' . $user . '/gpx.json', json_encode($json));
+	file_put_contents($base_path . '/' . $data_path . '/' . $user . '/' . $tryb . '.json', json_encode($json));
 
 	//create map as image
 	//https://gist.github.com/abarth500/1477057
@@ -213,8 +233,8 @@ if($status){
 	$urlmini="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 	$urlmini.=$enc;
 	$imagename=str_replace('.gpx', '', $filename);
-	$img = $base_path . '/' . $data_path . '/' . $user . '/maps/'. $imagename . '.png';
-	$imgmini = $base_path . '/' . $data_path . '/' . $user . '/maps/mini-' . $imagename. '.png';
+	$img = $base_path . '/' . $data_path . '/' . $user . '/maps/' . $tryb . '/' . $imagename . '.png';
+	$imgmini = $base_path . '/' . $data_path . '/' . $user . '/maps/' . $tryb . '/mini-' . $imagename. '.png';
 	file_put_contents($img, file_get_contents($url));
 	file_put_contents($imgmini, file_get_contents($urlmini));
 }
@@ -231,7 +251,7 @@ if($mode==1) {
 <link rel=\"stylesheet\" href=\"gpx.css\" />";
 
 	if($status){
-		echo "<meta http-equiv=\"Refresh\" content=\"3; url=gpx.php\"";
+		echo "<meta http-equiv=\"Refresh\" content=\"3; url=gpx.php?tryb=" . $tryb . "\"";
 	}
 
 	echo "</head>

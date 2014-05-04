@@ -11,6 +11,24 @@ $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 $data_path="users";
 $user=$_SESSION["username"];
 
+if(isset($_GET['tryb'])){
+	if($_GET['tryb']=="gpx"){
+		$tryb="gpx";
+	}
+	else if($_GET['tryb']=="szlaki"){
+		$tryb="szlaki";
+	}
+	else if($_GET['tryb']=="inne"){
+		$tryb="inne";
+	}
+	else {
+		$tryb="gpx";
+	}
+}
+else{
+	$tryb="gpx";
+}
+
 if($USER->authenticated) {
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">
@@ -326,7 +344,7 @@ params[decodeURIComponent(tokens[1])]
                 };
                 var map = new google.maps.Map(document.getElementById(\"map\"),
                     mapOptions);
-                loadGPXFileIntoGoogleMap(map, \"download.php?filename=\" + params.file + \".gpx\");
+                loadGPXFileIntoGoogleMap(map, \"download.php?tryb=" . $tryb . "&filename=\" + params.file + \".gpx\");
                 document.title = \"Mapka Google \" + params.file;
                 });
 

@@ -538,6 +538,10 @@ EOT;
 				mkdir($dir, 0755);
 				$dir = User::USER_HOME . $username . "/maps";
 				mkdir($dir, 0755);
+				$dir = User::USER_HOME . $username . "/szlaki";
+				mkdir($dir, 0755);
+				$dir = User::USER_HOME . $username . "/inne";
+				mkdir($dir, 0755);
 				$dir = User::USER_HOME . $username . "/gpx.json";
 				copy("example/gpx.json.empty", $dir);
 				// if there is a callback, call it

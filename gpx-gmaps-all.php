@@ -11,7 +11,25 @@ $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 $data_path="users";
 $user=$_SESSION["username"];
 
-if($USER->authenticated) {
+if(isset($_GET['tryb'])){
+	if($_GET['tryb']=="gpx"){
+		$tryb="gpx";
+	}
+	else if($_GET['tryb']=="szlaki"){
+		$tryb="szlaki";
+	}
+	else if($_GET['tryb']=="inne"){
+		$tryb="inne";
+	}
+	else {
+		$tryb="gpx";
+	}
+}
+else{
+	$tryb="gpx";
+}
+
+if($USER->authenticated && $tryb=="gpx") {
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">
     <head>
@@ -331,7 +349,7 @@ $files=array_diff(scandir($data_path . "/" . $user . "/gpx/"), array("..", "."))
 $len=strlen($_POST["files"]);
 foreach ($files as $key => $value) {
 	if (substr($value, 0, $len) == $_POST["files"]) {
-		echo "loadGPXFileIntoGoogleMap(map, \"download.php?filename=" . $value . "\");"."\n";
+		echo "loadGPXFileIntoGoogleMap(map, \"download.php?tryb=" . $tryb . "&filename=" . $value . "\");"."\n";
 	}
 }
 

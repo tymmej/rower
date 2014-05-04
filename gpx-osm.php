@@ -11,6 +11,24 @@ $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 $data_path="users";
 $user=$_SESSION["username"];
 
+if(isset($_GET['tryb'])){
+	if($_GET['tryb']=="gpx"){
+		$tryb="gpx";
+	}
+	else if($_GET['tryb']=="szlaki"){
+		$tryb="szlaki";
+	}
+	else if($_GET['tryb']=="inne"){
+		$tryb="inne";
+	}
+	else {
+		$tryb="gpx";
+	}
+}
+else{
+	$tryb="gpx";
+}
+
 if($USER->authenticated) {
 echo "<html>
 <head>
@@ -75,7 +93,7 @@ echo "<html>
 			var lgpx = new OpenLayers.Layer.Vector(\"Track\", {
 				strategies: [new OpenLayers.Strategy.Fixed()],
 				protocol: new OpenLayers.Protocol.HTTP({
-					url: \"download.php?filename=\" + params.file + \".gpx\",
+					url: \"download.php?tryb=" . $tryb . "&filename=\" + params.file + \".gpx\",
 					format: new OpenLayers.Format.GPX()
 				}),
 				style: {strokeColor: \"red\", strokeWidth: 5, strokeOpacity: 0.5},

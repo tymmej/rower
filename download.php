@@ -9,12 +9,27 @@ $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 $data_path="users";
 $user=$_SESSION["username"];
 
+if(isset($_GET['tryb'])){
+	if($_GET['tryb']=="gpx"){
+		$tryb="gpx";
+	}
+	else if($_GET['tryb']=="szlaki"){
+		$tryb="szlaki";
+	}
+	else if($_GET['tryb']=="inne"){
+		$tryb="inne";
+	}	
+}
+else{
+	$tryb="gpx";
+}
+
 if($USER->authenticated) {	
 	if($ext == "png") {
-		$file = $data_path . "/" . $user . "/maps/" . $file_name;
+		$file = $data_path . "/" . $user . "/maps/" . $tryb . "/" . $file_name;
 	}
 	else if($ext == "gpx") {
-		$file = $data_path . "/" . $user . "/gpx/" . $file_name;
+		$file = $data_path . "/" . $user . "/" . $tryb . "/" . $file_name;
 	}
 	header('Content-Description: File Transfer');
 

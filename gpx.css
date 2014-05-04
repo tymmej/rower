@@ -50,7 +50,7 @@ td {
 	background: #ededed;
 }
 
-#logout, #login, #register, #podsumowanie, #upload {
+#logout, #login, #register, #podsumowanie, #upload, #tryb {
 	border:#ccc 1px solid;
 	width: 100%;
 	margin-top: 20px;
@@ -60,6 +60,14 @@ td {
 	overflow: auto;
 	width: 100%;
 	margin-top: 20px;
+}
+
+#tryb {
+	height: 1.8em;
+	line-height: 1.8em;
+	text-align: center;
+	vertical-align: middle;
+	display: inline-block
 }
 
 table {
