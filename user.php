@@ -544,6 +544,12 @@ EOT;
 				mkdir($dir, 0755);
 				$dir = User::USER_HOME . $username . "/gpx.json";
 				copy("example/gpx.json.empty", $dir);
+				$dir = User::USER_HOME . $username . "/szlaki.json";
+				copy("example/gpx.json.empty", $dir);
+				$dir = User::USER_HOME . $username . "/inne.json";
+				copy("example/gpx.json.empty", $dir);
+				$dir = User::USER_HOME . $username . "/serwis.json";
+				copy("example/serwis.json", $dir);
 				// if there is a callback, call it
 				if($registration_callback !== false) { $registration_callback($username, $email, $dir); }
 				return true; }
