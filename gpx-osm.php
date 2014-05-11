@@ -103,8 +103,18 @@ echo "<!DOCTYPE html>
 			map.addLayer(lgpx);
  
 			var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection(\"EPSG:4326\"), map.getProjectionObject());
-			map.setCenter(lonLat, zoom);
- 
+//			map.setCenter(lonLat, zoom);
+			var dataExtent;
+			var setExtent = function()
+			{
+				if(dataExtent)
+					dataExtent.extend(this.getDataExtent());
+				else
+					dataExtent = this.getDataExtent();
+				map.zoomToExtent(dataExtent);
+			};
+			lgpx.events.register(\"loadend\", lgpx, setExtent);
+
 			var size = new OpenLayers.Size(21, 25);
 			var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 			var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
