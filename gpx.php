@@ -102,7 +102,8 @@ echo "<div id=\"logout\">
 if($tryb=="gpx") {
 	echo "<div id=\"podsumowanie\">
 		<form action=\"gpx-gmaps-all.php\" method=\"post\">
-		Okres: <input name=\"files\" type=\"text\" />
+		od: <input name=\"start\" type=\"text\" />
+		do: <input name=\"end\" type=\"text\" />
 		<input type=\"submit\" value=\"Pokaż\" />
 		</form>
 		</div>";

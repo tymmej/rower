@@ -345,14 +345,22 @@ params[decodeURIComponent(tokens[1])]
                     
 $files=array_diff(scandir($data_path . "/" . $user . "/gpx/"), array("..", "."));
 
-$len=strlen($_POST["files"]);
+$start=$_POST["start"];
+$lenstart=strlen($start);
+if($_POST["end"] != "") {
+	$end=$_POST["end"];
+}
+else {
+	$end=date("Ymd");
+}
+$lenend=strlen($end);
 foreach ($files as $key => $value) {
-	if (substr($value, 0, $len) == $_POST["files"]) {
+	if (substr($value, 0, $lenstart) >= $start && substr($value, 0, $lenend) <= $end) {
 		echo "loadGPXFileIntoGoogleMap(map, \"download.php?tryb=" . $tryb . "&filename=" . $value . "\");"."\n";
 	}
 }
 
-echo                "document.title = \"Mapka Google " .  $_POST["files"]."\"\n
+echo                "document.title = \"Mapka Google " .  $start . " - " . $end ."\"\n
                 });
 
 </script>
