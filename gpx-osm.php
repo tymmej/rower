@@ -30,8 +30,9 @@ else{
 }
 
 if($USER->authenticated) {
-echo "<html>
+echo "<!DOCTYPE html>
 <head>
+	<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"/>
 	<!-- Source: http://wiki.openstreetmap.org/wiki/Openlayers_Track_example -->
 	<title>Mapka OSM</title>
 	<!-- bring in the OpenLayers javascript library
@@ -115,7 +116,7 @@ echo "<html>
 <!-- body.onload is called once the page is loaded (call the 'init' function) -->
 <body onload=\"init();\">
 	<!-- define a DIV into which the map will appear. Make it take up the whole window -->
-	<div style=\"width:100%; height:100%\" id=\"map\"></div>
+	<div id=\"map\" style=\"top: 0; left: 0; bottom: 0; right: 0; position: fixed;\"></div>
 </body>
 </html>";
 }

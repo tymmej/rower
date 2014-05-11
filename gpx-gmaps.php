@@ -30,8 +30,7 @@ else{
 }
 
 if($USER->authenticated) {
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">
+echo "<!DOCTYPE html>
     <head>
         <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"/>
         <title>Mapka Google</title>
@@ -49,7 +48,7 @@ echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3
         <script type=\"text/javascript\"
             src=\"//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\">
         </script>
-        <script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js?key=" . $key . "&sensor=false\"></script>
+        <script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js?key=" . $key . "&amp;sensor=false\"></script>
         <script src=\"loadgpx.js\" type=\"text/javascript\"></script>
         <script type=\"text/javascript\">
 

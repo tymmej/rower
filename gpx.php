@@ -14,10 +14,7 @@ function registration_callback($username, $email, $userdir)
 require_once("user.php");
 $USER = new User("registration_callback");
 
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
-\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
-
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+echo "<!DOCTYPE html>
 <head>
 	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
 	<script type=\"text/javascript\" src=\"js/sha1.js\"></script>
@@ -56,8 +53,8 @@ if(!$USER->authenticated) {
 		<input type=\"hidden\" name=\"op\" value=\"login\"/>
 		<input type=\"hidden\" name=\"sha1\" value=\"\"/>
 		<table>
-			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" autocapitalize=\"off\" autocorrect=\"off\" /></td></tr>
-			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" autocapitalize=\"off\" autocorrect=\"off\" /></td></tr>
+			<tr><td>Login </td><td><input type=\"text\" name=\"username\" value=\"\" autocapitalize=\"none\" autocorrect=\"off\" /></td></tr>
+			<tr><td>Hasło </td><td><input type=\"password\" name=\"password1\" value=\"\" autocapitalize=\"none\" autocorrect=\"off\" /></td></tr>
 		</table>
 		<input type=\"submit\" value=\"Zaloguj\" />
 		</form></div>";
@@ -287,10 +284,10 @@ if($tryb=="gpx"){
 echo "<div class=\"grid\">";
 foreach($trips as $trip) {
 	echo "\t<div class=\"column\"><table><tr>\n\t\t<th colspan=\"" . ($tryb!="szlaki" ? 4 : 3) ."\">
-		<a href=\"gpx-gmaps.php?tryb=" . $tryb . "&file=". $trip['date'] . "\">" 
+		<a href=\"gpx-gmaps.php?tryb=" . $tryb . "&amp;file=". $trip['date'] . "\">" 
 		. $trip['desc'] .
 		"</a>
-		<a href=\"gpx-osm.php?tryb=" . $tryb . "&file=" . $trip['date'] . "\">"
+		<a href=\"gpx-osm.php?tryb=" . $tryb . "&amp;file=" . $trip['date'] . "\">"
 		. ($tryb!="szlaki" ? $trip['date'] : "OSM") .
 		"</a>
 		</th>\n\t</tr>
@@ -309,8 +306,8 @@ foreach($trips as $trip) {
 				. floor($trip['dist']/18) ."h " . (int)(($trip['dist']%18)/18*60) . "m".
 				"</td>";
 		}
-		echo "<td><a href=\"download.php?tryb=" . $tryb . "&filename=" . $trip['map'] . "\">
-			<img width=\"250px\" height=\"125\" src=\"download.php?tryb=" . $tryb . "&filename=mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
+		echo "<td><a href=\"download.php?tryb=" . $tryb . "&amp;filename=" . $trip['map'] . "\">
+			<img width=\"250\" height=\"125\" src=\"download.php?tryb=" . $tryb . "&amp;filename=mini-" . $trip['map'] . "\" alt=\"" . $trip['desc'] . " - " .  $trip['date'] . "\" />
 		</a>
 		</td>\n\t</tr></table></div>\n";
 }
