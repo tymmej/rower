@@ -147,10 +147,6 @@ table tr:hover .trip1 {
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : landscape) {
-	body {
-		-webkit-text-size-adjust: 100%;
-		font-size:2em;
-	}
 	.grid .column {
 		width: 49% !important;
 		float: left !important;
@@ -172,10 +168,6 @@ only screen
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : portrait){
-	body {
-		-webkit-text-size-adjust: 100%;
-		font-size:2em;
-	}
 	.grid .column {
 		width: 100% !important;
 		margin-left: 0 !important;
@@ -207,5 +199,15 @@ and (max-width: 1010px) {
 		width: 100% !important;
 		margin-left: 0 !important;
 		clear: none !important;
+	}
+}
+
+/* font size ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+	body {
+		-webkit-text-size-adjust: 100%;
+		font-size: 2em;
 	}
 }
