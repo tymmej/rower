@@ -50,7 +50,7 @@ td {
 	background: #ededed;
 }
 
-#logout, #login, #register, #podsumowanie, #upload, #tryb, #stats, #serwis, #calendar {
+#logout, #login, #register, #podsumowanie, #upload, #tryb {
 	border:#ccc 1px solid;
 	width: 100%;
 	margin-top: 20px;
@@ -58,6 +58,8 @@ td {
 
 #stats, #serwis, #calendar {
 	overflow: auto;
+	width: 100%;
+	margin-top: 20px;
 }
 
 #tryb {
