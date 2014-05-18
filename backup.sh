@@ -2,7 +2,8 @@
 
 #variables
 ADDRESS="tymejczyk.pl"
-OPTIONS="-a --delete --delete-excluded --password-file=/home/tymmej/documents/rower/pass --exclude=pass"
+USERNAME="tymmej"
+OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r  --password-file=/home/tymmej/documents/rower/pass --exclude=pass"
 
 #which enabled, start at 0
 #look at paths()
@@ -22,7 +23,7 @@ Usage:
 		exit 1
 		;;
 	l)
-		ADDRESS="192.168.1.4"
+		ADDRESS="192.168.1.6"
 		;;
 	d)
 		OPTIONS="$OPTIONS -n"
@@ -34,13 +35,13 @@ Usage:
 done
 
 #local paths
-paths=("$ADDRESS::www/rower/users"
+paths=("$USERNAME@$ADDRESS::www/rower/users"
 	"/home/tymmej/documents/rower"
 )
 
 #dest paths
 rpaths=("/home/tymmej/documents/rower"
-	"$ADDRESS::www"
+	"$USERNAME@$ADDRESS::www"
 )
 
 for index in ${!paths[*]}
