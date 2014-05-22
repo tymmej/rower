@@ -22,7 +22,7 @@ if(isset($_POST['tryb'])){
 	}
 	else if($_POST['tryb']=="inne"){
 		$tryb="inne";
-	}	
+	}
 }
 else{
 	$tryb="gpx";
@@ -48,6 +48,69 @@ function timeDiff($curTime, $prevTime) {
 	$prevTime=strtotime($prevTime);
 
 	return $curTime-$prevTime;
+}
+
+function findPerpendicularDistance($p, $p1,$p2) {
+    // if start and end point are on the same x the distance is the difference in X.
+    $result;
+    $slope;
+    $intercept;
+    if ($p1['lat']==$p2['lat']){
+        $result=abs($p['lat']-$p1['lat']);
+    }else{
+		$coefficient=1/abs(cos(($p2['lon'] + $p1['lon'])/2));
+        $slope = ($p2['lon']*$coefficient - $p1['lon']*$coefficient) / ($p2['lat'] - $p1['lat']);
+        $intercept = $p1['lon']*$coefficient - ($slope * $p1['lat']);
+        $result = abs($slope * $p['lat'] - $p['lon']*$coefficient + $intercept) / sqrt(pow($slope, 2) + 1);
+    }
+    return $result;
+}
+
+function properRDP($points,$epsilon){
+	$numOfPoints=count($points);
+    $firstPoint=$points[0];
+    $lastPoint=$points[$numOfPoints-1];
+    if ($numOfPoints<3){
+        return $points;
+    }
+    $index=-1;
+    $dist=0;
+    for ($i=1;$i<$numOfPoints-1;$i++){
+        $cDist=findPerpendicularDistance($points[$i],$firstPoint,$lastPoint);
+        if ($cDist>$dist){
+            $dist=$cDist;
+            $index=$i;
+        }
+    }
+    if ($dist>$epsilon){
+        // iterate
+        $l1=array_slice($points, 0, $index+1);
+        $l2=array_slice($points, $index);
+        $r1=properRDP($l1,$epsilon);
+        $r2=properRDP($l2,$epsilon);
+        // concat r2 to r1 minus the end/startpoint that will be the same
+        $rs=array_merge(array_slice($r1, 0, count($r1)-1), $r2);
+        return $rs;
+    }else{
+        return compact($firstPoint,$lastPoint);
+    }
+}
+
+function rdppoints($points, $numOfPoints) {
+	$epsilon=0.00001;
+	$count=count($points);
+	if($count>$numOfPoints){
+		do {
+			$count>$numOfPoints ? $epsilon*=1.1 : $epsilon/=1.1;
+			$reduced=properRDP($points, $epsilon);
+			$count=count($reduced);
+			echo $count."\n";
+		} while($count>$numOfPoints||$count<$numOfPoints-10);
+	}
+	else {
+		$reduced=$points;
+	}
+	return $reduced;
 }
 
 //https://gist.github.com/abarth500/1477057
@@ -83,7 +146,7 @@ function encodeGPolylineNum($num){
 		array_push($num,$nn);
 	}
 	//STEP8 - STEP9 - STEP10 - STEP11
- 
+
 	for($c = 0;$c < count($num);$c++){
 		if($c != count($num)-1){
 			$num[$c] = chr(bindec($num[$c]) + 32 + 63);
@@ -135,7 +198,7 @@ else {
 
 //if no error, continue
 if($status){
-	//load gpx file	
+	//load gpx file
 	$text=file_get_contents($file);
 
 	//check if gpx contains name tag, if not: add
@@ -200,7 +263,7 @@ if($status){
 	//create map as image
 	//https://gist.github.com/abarth500/1477057
 	$i=0;
-	
+
 	$newgpx=array();
 	foreach ($gpx->trk->trkseg as $trkseg) {
 		foreach ($trkseg->trkpt as $pt) {
@@ -210,7 +273,7 @@ if($status){
 			$i++;
 		}
 	}
-	
+
 	$enc = "";
 	$old = true;
 	$skip=(int)$i/50;
@@ -269,3 +332,4 @@ if($mode==1) {
 }
 }
 ?>
+
