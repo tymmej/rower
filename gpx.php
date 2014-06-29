@@ -40,10 +40,10 @@ class Rower
 	//print div with trip
 	private function printTrip($trip) {
 		echo "\t<div class=\"column\"><table><tr>\n\t\t<th colspan=\"" . ($this->tryb!="szlaki" ? 4 : 3) ."\">
-			<a href=\"gpx-gmaps.php?tryb=" . $this->tryb . "&amp;file=". $trip['date'] . "\">" 
+			<a href=\"showmap.php?tryb=" . $this->tryb . "&amp;file=". $trip['date'] . "\">" 
 			. $trip['desc'] .
 			"</a>
-			<a href=\"gpx-osm.php?tryb=" . $this->tryb . "&amp;file=" . $trip['date'] . "\">"
+			<a href=\"showmap.php?source=osm&amp;tryb=" . $this->tryb . "&amp;file=" . $trip['date'] . "\">"
 			. ($this->tryb!="szlaki" ? $trip['date'] : "OSM") .
 			"</a>
 			</th>\n\t</tr>
@@ -341,7 +341,7 @@ class Rower
 
 		if($this->tryb=="gpx") {
 			echo "<div id=\"podsumowanie\">
-				<form action=\"gpx-gmaps-all.php\" method=\"post\">
+				<form action=\"showmap.php?multi=true\" method=\"post\">
 				od: <input name=\"start\" type=\"text\" />
 				do: <input name=\"end\" type=\"text\" />
 				<input type=\"submit\" value=\"Pokaż\" />
