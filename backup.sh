@@ -3,7 +3,7 @@
 #variables
 ADDRESS="tymejczyk.pl"
 USERNAME="tymmej"
-OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r  --password-file=/home/tymmej/documents/rower/pass --exclude=pass"
+OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r  --password-file=/cygdrive/o/Dokumenty/pass.txt --exclude=pass"
 
 #which enabled, start at 0
 #look at paths()
@@ -36,12 +36,12 @@ done
 
 #local paths
 paths=("$USERNAME@$ADDRESS::www/rower/users"
-	"/home/tymmej/documents/rower"
+	"/cygdrive/o/Rower/"
 )
 
 #dest paths
-rpaths=("/home/tymmej/documents/rower"
-	"$USERNAME@$ADDRESS::www"
+rpaths=("/cygdrive/o/Rower"
+	"$USERNAME@$ADDRESS::www/rower/"
 )
 
 for index in ${!paths[*]}
