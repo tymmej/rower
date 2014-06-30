@@ -30,7 +30,7 @@ echo "<!DOCTYPE html>
 
 $obj=new Rower;
 $obj->setAuth($USER->authenticated);
-$obj->run();
+$obj->run_info();
 
 echo "</div>
 </body>

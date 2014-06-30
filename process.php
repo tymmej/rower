@@ -9,7 +9,6 @@ if($USER->authenticated) {
 
 //main part of script
 
-$base_path=getcwd();
 $data_path="users";
 $user=$_SESSION["username"];
 
@@ -157,6 +156,61 @@ function encodeGPolylineNum($num){
 	return implode("",$num);
 }
 
+//check for best average speed
+function checkbest($stats, &$best, $name, $whichdistance){
+	$maxavg=-1;
+	$i_max=sizeof($stats);
+	$i=0;
+	$j=0;
+	$ile=$whichdistance;
+	$max_i=0;
+	$max_j=1;
+	while(true){
+		$avg=-1;
+		while($stats[$i]['distance']<1000){ //ignore first 1000m, floating of gps
+			$i++;
+		}
+		$przejechane=0;
+		$j=$i+1;
+		while($przejechane<$ile && $j<$i_max){
+			$przejechane+=$stats[$j]['distance']-$stats[$j-1]['distance'];
+			$j++;
+		}
+		if(($stats[$j-1]['time']-$stats[$i]['time'])!=0){
+			$avg=$przejechane/($stats[$j-1]['time']-$stats[$i]['time'])*3.6;
+		}
+		if($przejechane<0.95*$ile) break;
+		if($avg>$maxavg) {
+			$maxavg=round($avg, 2);
+			$max_j=$j-1;
+			$max_i=$i;
+			$max_start=round($stats[$max_i]['distance']/1000, 2);
+			$max_end=round($stats[$max_j-1]['distance']/1000, 2);
+		}
+		$i++;
+	}
+	if($maxavg>$best['max'][$whichdistance]['avg']){
+		$best['max'][$whichdistance]['avg']=$maxavg;
+		$best['max'][$whichdistance]['file']=$name;
+		$best['max'][$whichdistance]['max_start']=$max_start;
+		$best['max'][$whichdistance]['max_end']=$max_end;
+	}
+	if($maxavg>-1){
+		if(!isset($best['trips'][$name])) $best['trips'][$name]=array();
+		$best['trips'][$name][$whichdistance]=array();
+		$best['trips'][$name][$whichdistance]['avg']=$maxavg;
+		$best['trips'][$name][$whichdistance]['max_start']=$max_start;
+		$best['trips'][$name][$whichdistance]['max_end']=$max_end;
+	}
+	else{
+		if(!isset($best['trips'][$name])) $best['trips'][$name]=array();
+		$best['trips'][$name][$whichdistance]=array();
+		$best['trips'][$name][$whichdistance]['avg']=-1;
+		$best['trips'][$name][$whichdistance]['max_start']=0;
+		$best['trips'][$name][$whichdistance]['max_end']=0;
+	}
+}
+
 //filename of new gpx
 if(isset($_FILES['gpx']['name'])){
 	$filename=basename($_FILES['gpx']['name']);
@@ -170,11 +224,11 @@ else {
 	$mode=2;
 }
 
-$file=$base_path . '/' . $data_path . '/' . $user . '/' . $tryb . '/' . $filename;
+$file=$data_path . '/' . $user . '/' . $tryb . '/' . $filename;
 
 //move file to tmp folder
 if($mode==1){
-	$uploadfile=$base_path . "/tmp/" . $filename;
+	$uploadfile='tmp/' . $filename;
 	if (move_uploaded_file($_FILES['gpx']['tmp_name'], $uploadfile)) {
 		//check if file valid by using xml checks
 		$xml=XMLReader::open($uploadfile);
@@ -213,6 +267,11 @@ if($status){
 	$distance=0;
 	$time=0;
 
+	$stats=array();
+	$stats[0]['time']=0;
+	$stats[0]['distance']=0;
+	$i=1;
+	
 	//calculate distance and time
 	foreach ($gpx->trk->trkseg as $trkseg) {
 		$isFirst=true;
@@ -232,18 +291,20 @@ if($status){
 			$distance+=haversineDistance($cur['lat'], $cur['lon'], $prev['lat'], $prev['lon']);
 			$time+=timeDiff($cur['time'], $prev['time']);
 
+			$stats[$i]['time']=$time;
+			$stats[$i]['distance']=$distance;
+			$i++;
 			$prev=$cur;
 		}
 	}
 	$distance=round($distance/1000, 2);
 
 	//read gpx.json
-	$text=file_get_contents($base_path . '/' . $data_path . '/' . $user . "/" . $tryb .".json");
+	$text=file_get_contents($data_path . '/' . $user . "/" . $tryb .".json");
 	$json=json_decode($text, true);
 
 	//create new trip
 	$new_trip=array();
-	$new_trip['name']=$filename;
 	$new_trip['desc']=$desc;
 	$new_trip['dist']=$distance;
 	if($tryb!="szlaki") {
@@ -255,10 +316,24 @@ if($status){
 	$new_trip['tags']="";
 
 	//push to json
-	array_push($json['trips'], $new_trip);
+	$json[str_replace('.gpx', '', $filename)]=$new_trip;
 
 	//write data
-	file_put_contents($base_path . '/' . $data_path . '/' . $user . '/' . $tryb . '.json', json_encode($json));
+	file_put_contents($data_path . '/' . $user . '/' . $tryb . '.json', json_encode($json, JSON_PRETTY_PRINT));
+
+	
+	//check for best averages
+	if($tryb=="gpx"){
+		$distances=array(500, 1000, 2000, 5000, 10000, 15000, 20000, 50000);
+		$text=file_get_contents($data_path . '/' . $user . '/best.json');
+		$best=json_decode($text, true);
+
+		foreach($distances as $distance1){
+			checkbest($stats, $best, str_replace(".gpx", "", $filename), $distance1);
+		}
+		
+		file_put_contents($data_path . '/' . $user . '/best.json', json_encode($best, JSON_PRETTY_PRINT));
+	}
 
 	//create map as image
 	//https://gist.github.com/abarth500/1477057
@@ -296,8 +371,8 @@ if($status){
 	$urlmini="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 	$urlmini.=$enc;
 	$imagename=str_replace('.gpx', '', $filename);
-	$img = $base_path . '/' . $data_path . '/' . $user . '/maps/' . $tryb . '/' . $imagename . '.png';
-	$imgmini = $base_path . '/' . $data_path . '/' . $user . '/maps/' . $tryb . '/mini-' . $imagename. '.png';
+	$img = $data_path . '/' . $user . '/maps/' . $tryb . '/' . $imagename . '.png';
+	$imgmini = $data_path . '/' . $user . '/maps/' . $tryb . '/mini-' . $imagename. '.png';
 	file_put_contents($img, file_get_contents($url));
 	file_put_contents($imgmini, file_get_contents($urlmini));
 }
