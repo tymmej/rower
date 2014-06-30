@@ -380,7 +380,7 @@ class Rower
 		for($i=0; $i<2; $i++) {
 			echo "<div class=\"column\"><table><tr><th>Dystans</th><th>Średnia</th><th>Data</th></tr>";
 			for($j=$i*4; $j<$i*4+4; $j++) {
-				echo "<tr><td>" . $distances[$j]/1000 . " km</td><td>" . $this->best['trips'][$this->file][$distances[$j]]['avg'] . " km/h</td><td>" . $this->best['trips'][$this->file][$distances[$j]]['max_start'] . " km - " . $this->best['trips'][$this->file][$distances[$j]]['max_end'] . " km)</td></tr>";
+				echo "<tr><td>" . $distances[$j]/1000 . " km</td><td>" . $this->best['trips'][$this->file][$distances[$j]]['avg'] . " km/h</td><td>" . $this->best['trips'][$this->file][$distances[$j]]['max_start'] . " km - " . $this->best['trips'][$this->file][$distances[$j]]['max_end'] . " km</td></tr>";
 			}
 			echo "</tr></table></div>";
 		}
