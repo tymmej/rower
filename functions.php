@@ -56,7 +56,7 @@ class Rower
 			echo '<td>' . $trip['time_readable']. '</td>';
 		}
 		echo '<td>
-			<a href="gpx.php?mode=trip&amp;tryb=' . $this->tryb . '&amp;filename=' . $date . '">
+			<a href="' . ($width==250 ? 'gpx' : 'download') .'.php?mode=trip&amp;tryb=' . $this->tryb . '&amp;filename=' . $date . ($width==250 ? '' : '.png') .'">
 				<img width="' . $width . '" height="' . $height . '" src="download.php?tryb=' . $this->tryb . '&amp;filename=' . ($width==250 ? 'mini-' : '') . $trip['map'] . '" alt="' . $trip['desc'] . ' - ' .  $date . '" />
 			</a>
 			</td></tr>
