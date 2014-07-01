@@ -154,7 +154,7 @@ class Rower
 		for($i=0; $i<2; $i++) {
 			echo '<div class="column"><table><tr><th>Dystans</th><th>Średnia</th><th>Data</th></tr>';
 			for($j=$i*4; $j<$i*4+4; $j++) {
-				echo '<tr><td>' . $distances[$j]/1000 . ' km</td><td>' . ($best[$distances[$j]]['avg']==-1 ? '-' : $best[$distances[$j]]['avg']. ' km/h') . '</td><td>' . ($best[$distances[$j]]['avg']==-1 ? '-' : (isset($best[$distances[$j]]['file']) ? $best[$distances[$j]]['file'] : '') . ' (' . $best[$distances[$j]]['max_start'] . ' km - ' . $best[$distances[$j]]['max_end'] . ' km)').'</td></tr>';
+				echo '<tr><td>' . $distances[$j]/1000 . ' km</td><td>' . ($best[$distances[$j]]['avg']==-1 ? '-' : sprintf("%.2f", $best[$distances[$j]]['avg']). ' km/h') . '</td><td>' . ($best[$distances[$j]]['avg']==-1 ? '-' : (isset($best[$distances[$j]]['file']) ? $best[$distances[$j]]['file'] : '') . ' (' . sprintf("%.2f", $best[$distances[$j]]['max_start']) . ' km - ' . sprintf("%.2f", $best[$distances[$j]]['max_end']) . ' km)').'</td></tr>';
 			}
 			echo '</table></div>';
 		}
@@ -806,7 +806,7 @@ class Process {
 		$urlmini="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 		$urlmini.=$this->enc;
 		$imagename=str_replace('.gpx', '.png', $this->filename);
-		$img = $path . $imagename;
+		$img = $path . '/' . $imagename;
 		$imgmini = $path . '/mini-' . $imagename;
 		file_put_contents($img, file_get_contents($url));
 		file_put_contents($imgmini, file_get_contents($urlmini));
@@ -846,6 +846,30 @@ class Process {
 		}
 	}
 	
+	private function printNotAuthenticated() {
+		echo '<div id="register"><form id="formregistration" class="controlbox" name="new user registration" action="gpx.php" method="post">
+				<input type="hidden" name="op" value="register"/>
+				<input type="hidden" name="sha1" value=""/>
+				<table>
+					<tr><td>Login </td><td><input type="text" name="username" value="" /></td></tr>
+					<tr><td>E-mail </td><td><input type="text" name="email" value="" /></td></tr>
+					<tr><td>Hasło </td><td><input type="password" name="password1" value="" /></td></tr>
+					<tr><td>Hasło (powtórz) </td><td><input type="password" name="password2" value="" /></td></tr>
+				</table>
+				<input type="button" value="Zarejestruj" onclick="User.processRegistration()"/>
+			</form>
+			</div>
+			<div id="login"><form id="formlogin" class="controlbox" name="log in" action="gpx.php" onsubmit="User.processLogin(); return false" method="post">
+				<input type="hidden" name="op" value="login"/>
+				<input type="hidden" name="sha1" value=""/>
+				<table>
+					<tr><td>Login </td><td><input type="text" name="username" value="" autocapitalize="none" autocorrect="off" /></td></tr>
+					<tr><td>Hasło </td><td><input type="password" name="password1" value="" autocapitalize="none" autocorrect="off" /></td></tr>
+				</table>
+				<input type="submit" value="Zaloguj" />
+				</form></div>';
+	}
+	
 	private function printHTML(){
 		if($this->mode==1) {
 			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -857,7 +881,7 @@ class Process {
 <link rel="stylesheet" href="theme/gpx.css" />';
 		
 			if($this->status){
-				echo '<meta http-equiv="Refresh" content="3; url=gpx.php?tryb=' . $tryb . '"';
+				echo '<meta http-equiv="Refresh" content="3; url=gpx.php?tryb=' . $this->tryb . '"';
 			}
 		
 			echo '</head>
@@ -894,8 +918,8 @@ class Process {
 				
 				//check if gpx contains name tag, if not: add
 				if(!preg_match("/<name>/", $text)) {
-					$text = preg_replace("/<trk>/", "<trk><name>" . $desc . "</name>", $text);
-					file_put_contents($file, $text);
+					$text = preg_replace("/<trk>/", "<trk><name>" . $this->desc . "</name>", $text);
+					file_put_contents($this->file, $text);
 				}
 				
 				$this->gpx=simplexml_load_file($this->file);
