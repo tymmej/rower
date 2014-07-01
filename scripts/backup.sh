@@ -3,7 +3,7 @@
 #variables
 ADDRESS="tymejczyk.pl"
 USERNAME="tymmej"
-OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --password-file=/cygdrive/o/Dokumenty/pass.txt --exclude=pass --exclude=.git --exclude=.settings"
+OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --password-file=/cygdrive/o/Dokumenty/pass.txt --exclude=pass --exclude=.git --exclude=.gitignore  --exclude=.buildpath  --exclude=.project --exclude=.settings"
 
 #which enabled, start at 0
 #look at paths()
