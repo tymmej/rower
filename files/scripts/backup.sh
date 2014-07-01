@@ -36,11 +36,11 @@ done
 
 #local paths
 paths=("$USERNAME@$ADDRESS::www/rower/users"
-	"/cygdrive/o/Rower/"
+	"/cygdrive/o/Rower/files/"
 )
 
 #dest paths
-rpaths=("/cygdrive/o/Rower"
+rpaths=("/cygdrive/o/Rower/files"
 	"$USERNAME@$ADDRESS::www/rower/"
 )
 
