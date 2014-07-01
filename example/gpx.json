@@ -1,0 +1,43 @@
+{"trips":[
+
+{
+"name": "20100405.1.gpx",
+"desc": "Maślice",
+"dist": "12.26",
+"time": "47:19",
+"tags": ""
+},
+
+{
+"name": "20110728.1.gpx",
+"desc": "Millenijny",
+"dist": "12.9",
+"time": "47:57",
+"tags": "millenijny"
+},
+
+{
+"name": "20130622.1.gpx",
+"desc": "Bystrzyca", 
+"dist": "27.28",
+"time": "103:22",
+"tags": "maslice,bystrzyca"
+},
+
+{
+"name": "20130623.1.gpx",
+"desc": "Rędzin", 
+"dist": "30.24",
+"time": "109:42",
+"tags": "redzin,las redzinski,widawa,pola irygacyjne"
+},
+
+{
+"name": "20130713.1.gpx",
+"desc": "Samotwór i Gałów",
+"dist": "32.76",
+"time": "126:1",
+"tags": ""
+}
+]}
+
