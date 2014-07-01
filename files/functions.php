@@ -188,8 +188,10 @@ class Rower
 			Zalogowany jako ' . $_SESSION['username'] . '
 			<input type="submit" value="Wyloguj"/>
 			</form>
-			</div>
-			<div id="upload">
+			</div>';
+	
+		if($this->mode=='all') {
+			echo '<div id="upload">
 			<form enctype="multipart/form-data" action="process.php" method="post">
 			<input type="hidden" name="tryb" value="'.$this->tryb.'"/>
 			Opis: <input name="desc" type="text" />
@@ -197,8 +199,6 @@ class Rower
 			<input type="submit" value="Dodaj" />
 			</form>
 			</div>';
-	
-		if($this->mode=='all') {
 			if($this->tryb=='gpx') {
 				echo '<div id="podsumowanie">
 					<form action="showmap.php?multi=true" method="post">
