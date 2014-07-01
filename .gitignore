@@ -1,4 +1,2 @@
-/pass
-users/*
-tmp/*
+/users/
 /key.php
