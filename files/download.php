@@ -3,41 +3,30 @@
 require_once("user.php");
 $USER = new User("registration_callback");
 
+require_once('functions.php');
+
 $file_name = basename($_GET['filename']);
 $ext = pathinfo($file_name, PATHINFO_EXTENSION);
 
-$data_path="users";
-$user=$_SESSION["username"];
+$data_path='users';
+$user=$_SESSION['username'];
 
-if(isset($_GET['tryb'])){
-	if($_GET['tryb']=="gpx"){
-		$tryb="gpx";
-	}
-	else if($_GET['tryb']=="szlaki"){
-		$tryb="szlaki";
-	}
-	else if($_GET['tryb']=="inne"){
-		$tryb="inne";
-	}	
-}
-else{
-	$tryb="gpx";
-}
+$tryb=checkTryb();
 
 if($USER->authenticated) {	
-	if($ext == "png") {
-		$file = $data_path . "/" . $user . "/maps/" . $tryb . "/" . $file_name;
+	if($ext == 'png') {
+		$file = $data_path . '/' . $user . '/maps/' . $tryb . '/' . $file_name;
 	}
-	else if($ext == "gpx") {
-		$file = $data_path . "/" . $user . "/" . $tryb . "/" . $file_name;
+	else if($ext == 'gpx') {
+		$file = $data_path . '/' . $user . '/' . $tryb . '/' . $file_name;
 	}
 	if(file_exists($file)){
 		header('Content-Description: File Transfer');
 	
-		if($ext == "png") {
+		if($ext == 'png') {
 			header('Content-Type: image/png');
 		}
-		else if($ext == "gpx") {
+		else if($ext == 'gpx') {
 			header('Content-Type: application/gpx+xml');
 		}
 		header('Content-Disposition: inline; filename=' . $file_name);
@@ -55,6 +44,6 @@ if($USER->authenticated) {
 	}
 }
 else {
-	echo "Please log in";
+	echo 'Please log in';
 }
 ?>
