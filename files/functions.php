@@ -189,7 +189,11 @@ class Rower
 			<input type="submit" value="Wyloguj"/>
 			</form>
 			</div>';
-	
+		if($this->mode=='trip') {
+			echo '<div id="powrot">
+			<a href="gpx.php?tryb=' . $this->tryb . '">Powrót</a>
+			</div>';
+		}
 		if($this->mode=='all') {
 			echo '<div id="upload">
 			<form enctype="multipart/form-data" action="process.php" method="post">
