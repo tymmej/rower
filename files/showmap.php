@@ -46,9 +46,11 @@ if($multi) {
 }
 
 if($USER->authenticated) {
-	$file_name = basename($_GET['file']);
-	$file = $data_path . '/' . $user . '/' . $tryb . '/' . $file_name . '.gpx';
-	if(file_exists($file)){
+	if(!$multi){
+		$file_name = basename($_GET['file']);
+		$file = $data_path . '/' . $user . '/' . $tryb . '/' . $file_name . '.gpx';
+	}
+	if($multi || file_exists($file)){
 		if($source=='google'){
 			echo '<!DOCTYPE html>
 		<head>
@@ -101,7 +103,7 @@ if($USER->authenticated) {
 			echo 'document.title = "Mapka Google " + params.file;';
 		}
 		else{
-			$files=array_diff(scandir($data_path . '/' . $user . '/gpx/'), array('..', '.'));
+			$files=array_diff(scandir($data_path . '/' . $user . '/' . $tryb . '/'), array('..', '.'));
 			$start=$_POST['start'];
 			$lenstart=strlen($start);
 			if($_POST['end'] != '') {
