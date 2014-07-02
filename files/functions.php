@@ -881,7 +881,7 @@ class Process {
 <link rel="stylesheet" href="theme/gpx.css" />';
 		
 			if($this->status){
-				echo '<meta http-equiv="Refresh" content="3; url=gpx.php?tryb=' . $this->tryb . '"';
+				echo '<meta http-equiv="Refresh" content="3; url=gpx.php?mode=trip&amp;tryb=' . $this->tryb . '&amp;filename=' . str_replace('.gpx', '', $this->filename) . '"';
 			}
 		
 			echo '</head>
