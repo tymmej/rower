@@ -470,14 +470,15 @@ class Rower
 				//read data
 				$this->createData($data_path.'/'.$this->user.'/' .$this->tryb.'.json', 'gpx');
 				$this->checkFile();
-				if($this->tryb=='gpx'){
-					$this->createData($data_path.'/'.$this->user.'/best.json', 'besttrip');
+				if($this->file!=-1){
+					$this->printTrip($this->trips[$this->file], $this->file, 640, 320);
+					if($this->tryb=='gpx'){
+						$this->createData($data_path.'/'.$this->user.'/best.json', 'besttrip');
+						$this->printBest($this->best['trips'][$this->file]);
+					}
 				}
-				
-				$this->printTrip($this->trips[$this->file], $this->file, 640, 320);
-				
-				if($this->tryb=='gpx' && $this->file!=-1){
-					$this->printBest($this->best['trips'][$this->file]);
+				else{
+					echo 'File does not exist';
 				}
 			}
 		}

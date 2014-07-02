@@ -31,24 +31,28 @@ if($USER->authenticated) {
 	else if($ext == "gpx") {
 		$file = $data_path . "/" . $user . "/" . $tryb . "/" . $file_name;
 	}
-	header('Content-Description: File Transfer');
-
-	if($ext == "png") {
-		header('Content-Type: image/png');
+	if(file_exists($file)){
+		header('Content-Description: File Transfer');
+	
+		if($ext == "png") {
+			header('Content-Type: image/png');
+		}
+		else if($ext == "gpx") {
+			header('Content-Type: application/gpx+xml');
+		}
+		header('Content-Disposition: inline; filename=' . $file_name);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 3600*24*30));
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($file));
+		ob_clean();
+		flush();
+		readfile($file);
 	}
-	else if($ext == "gpx") {
-		header('Content-Type: application/gpx+xml');
+	else {
+		echo 'File does not exist';
 	}
-	header('Content-Disposition: inline; filename=' . $file_name);
-	header('Content-Transfer-Encoding: binary');
-	header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 3600*24*7));
-	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-	header('Pragma: public');
-	header('Content-Length: ' . filesize($file));
-	ob_clean();
-	flush();
-	readfile($file);
-	exit;
 }
 else {
 	echo "Please log in";
