@@ -1,5 +1,6 @@
 # CO TO JEST?
 Przechowywanie plików gpx z wycieczek.
+
 1. Podgląd pojedynczej trasy
    pokazuje średnią prędkość na danym dystansie dla trasy, dystans, średnią prędkość, mapę
 2. Podgląd wszystkich tras
