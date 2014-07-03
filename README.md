@@ -21,7 +21,7 @@ Aby włączyć rejestrację usunąć user.php:270.
 
 # TODO:
 
-```
+```php
 checkTryb(){
 	$tryby=array('gpx', 'szlaki', 'inne');
 	if(in_array($tryby, $_GET['tryb']){
