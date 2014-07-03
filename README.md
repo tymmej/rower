@@ -14,7 +14,9 @@ Przechowywanie plików gpx z wycieczek.
 
 # JAK ZACZĄĆ:
 W katalogu files są tylko pliki potrzebne do działanie (oprócz .gitignore).
+
 Do tego potrzebny jest plik key.php ze zmienną $key z kluczem do Google API (prawdopodobnie niewymagany przy małej ilości zapytań).
+
 Aby włączyć rejestrację usunąć user.php:270.
 
 # TODO:
