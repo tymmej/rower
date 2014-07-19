@@ -3,7 +3,7 @@
 #variables
 ADDRESS="tymejczyk.pl"
 USERNAME="tymmej"
-OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --password-file=/cygdrive/o/Dokumenty/pass.txt --exclude=pass --exclude=.git --exclude=.gitignore  --exclude=.buildpath  --exclude=.project --exclude=.settings"
+OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --exclude=pass --exclude=.git --exclude=.gitignore  --exclude=.buildpath  --exclude=.project --exclude=.settings"
 
 #which enabled, start at 0
 #look at paths()
@@ -36,11 +36,11 @@ done
 
 #local paths
 paths=("$USERNAME@$ADDRESS::www/rower/users"
-	"/cygdrive/o/Rower/files/"
+	"/home/tymmej/documents/documents/Programowanie/rower/files/"
 )
 
 #dest paths
-rpaths=("/cygdrive/o/Rower/files"
+rpaths=("/home/tymmej/documents/documents/Programowanie/rower/files"
 	"$USERNAME@$ADDRESS::www/rower/"
 )
 
