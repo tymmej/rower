@@ -1,19 +1,22 @@
 #!/bin/bash
 
 #variables
-ADDRESS="tymejczyk.pl"
-USERNAME="tymmej"
-OPTIONS="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r --exclude=pass --exclude=.git --exclude=.gitignore  --exclude=.buildpath  --exclude=.project --exclude=.settings"
+address="tymejczyk.pl"	#address visible from wan
+sshport=23				#ssh port
+laddress="192.168.1.6"	#address in lan for faster transfer
+username="www-data"		#name of rsync user
+options="-a --stats --delete --delete-excluded --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r"	#rsync options
+local=0					#0-wan, 1-lan
+usb=0					#0-backup to rsync, 1-backup to usb drive
+lpath="/mnt/backup"		#path to usb drive
+rpath="/data/external"	#path in remote drive
 
-#which enabled, start at 0
-#look at paths()
-enabled=(1 1)
 
 #get options from cli
-#before paths, becouse of $ADDRESS
-while getopts "hldp" options
+#before paths, because of $address
+while getopts "hldpu" args
 do
-case $options in
+case $args in
 	h)
 		echo "Backup
 Usage:
@@ -23,36 +26,57 @@ Usage:
 		exit 1
 		;;
 	l)
-		ADDRESS="192.168.1.6"
+		address=$laddress
+		sshport=22
+		local=1
 		;;
 	d)
-		OPTIONS="$OPTIONS -n"
+		options="$options -n"
 		;;
 	p)
-		OPTIONS="$OPTIONS --stats --progress"
+		options="$options --stats --progress"
+		;;
+	u)
+		usb=1
 		;;
 	esac
 done
 
-#local paths
-paths=("$USERNAME@$ADDRESS::www/rower/users"
+#check if we are on local network
+if [ $local -eq 0 ]; then
+	response=`curl -s -k --connect-timeout 2 https://$username@$laddress/rower | sed '2q;d' | grep 301 | wc -l`
+	if [ $response -eq 1 ]; then
+		address=$laddress
+		sshport=22
+		local=1
+	fi
+fi
+
+enabled=(1 1)
+
+spaths=("$username@$address:/www/rower/users"
 	"/home/tymmej/documents/documents/Programowanie/rower/files/"
 )
 
-#dest paths
-rpaths=("/home/tymmej/documents/documents/Programowanie/rower/files"
-	"$USERNAME@$ADDRESS::www/rower/"
+dpaths=("/home/tymmej/documents/documents/Programowanie/rower/files"
+	"$username@$address:/www/rower/"
 )
 
-for index in ${!paths[*]}
+if [ $local -eq 0 -a $usb -eq 0 ]; then
+	sshopt="-p $sshport"
+else
+	sshopt=""
+fi
+
+for index in ${!spaths[*]}
 do
 	if [ ${enabled[$index]} -eq 1 ]; then
 	echo ""
 		echo "<===============================================================================>"
-	echo "${paths[$index]} -> ${rpaths[$index]}"
-		rsync $OPTIONS $extra \
-			"${paths[$index]}" \
-			"${rpaths[$index]}"
-	echo ">===============================================================================<"
+		echo "${spaths[$index]} -> ${dpaths[$index]}"
+			rsync $options -e "ssh $sshopt" "${extra[@]}" \
+				"${spaths[$index]}" \
+				"${dpaths[$index]}"
+		echo ">===============================================================================<"
 	fi
 done
