@@ -945,20 +945,24 @@ class Process {
 
 function checkTryb() {
 	if(isset($_GET['tryb'])){
-		if($_GET['tryb']=='gpx'){
-			return 'gpx';
-		}
-		else if($_GET['tryb']=='szlaki'){
-			return 'szlaki';
-		}
-		else if($_GET['tryb']=='inne'){
-			return 'inne';
-		}
-		else {
-			return 'gpx';
-		}
+		$name=$_GET['tryb'];
+	}
+	else if(isset($_POST['tryb'])){
+		$name=$_POST['tryb'];
 	}
 	else{
+		$name='gpx';
+	}
+	if($name=='gpx'){
+		return 'gpx';
+	}
+	else if($name=='szlaki'){
+		return 'szlaki';
+	}
+	else if($name=='inne'){
+		return 'inne';
+	}
+	else {
 		return 'gpx';
 	}
 }
