@@ -19,6 +19,6 @@ require_once('functions.php');
 
 $obj=new Rower;
 $obj->setAuth($USER->authenticated);
-$obj->run();
+$obj->run('rower');
 
 ?>
