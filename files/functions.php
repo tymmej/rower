@@ -10,17 +10,15 @@ class Rower
 	private $best=array();
 	private $calendar=array();
 	private $auth=false;
-	private $database='json';
+    private $data_path='users';
+	private $database='sqlite';
+	private $ids=array(1=>'gpx', 2=>'szlaki', 3=>'inne');
 	
 	public function setAuth($auth) {
 		$this->auth=$auth;
 	}
 	
 	public function setDatabase($database) {
-		$this->database=$database;
-	}
-	
-	public function setName($database) {
 		$this->database=$database;
 	}
 
@@ -165,8 +163,6 @@ class Rower
 		echo '<!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script type="text/javascript" src="js/sha1.js"></script>
-	<script type="text/javascript" src="js/user.js"></script>
 	<title>Rower</title>
 	<link rel="stylesheet" href="theme/gpx.css" />
 </head>
@@ -224,19 +220,17 @@ class Rower
 	private function printNotAuthenticated() {
 		echo '<div id="register"><form id="formregistration" class="controlbox" name="new user registration" action="gpx.php" method="post">
 				<input type="hidden" name="op" value="register"/>
-				<input type="hidden" name="sha1" value=""/>
 				<table>
 					<tr><td>Login </td><td><input type="text" name="username" value="" /></td></tr>
 					<tr><td>E-mail </td><td><input type="text" name="email" value="" /></td></tr>
 					<tr><td>Hasło </td><td><input type="password" name="password1" value="" /></td></tr>
 					<tr><td>Hasło (powtórz) </td><td><input type="password" name="password2" value="" /></td></tr>
 				</table>
-				<input type="button" value="Zarejestruj" onclick="User.processRegistration()"/>
+				<input type="button" value="Zarejestruj"/>
 			</form>
 			</div>
-			<div id="login"><form id="formlogin" class="controlbox" name="log in" action="gpx.php" onsubmit="User.processLogin(); return false" method="post">
+			<div id="login"><form id="formlogin" class="controlbox" name="log in" action="gpx.php" method="post">
 				<input type="hidden" name="op" value="login"/>
-				<input type="hidden" name="sha1" value=""/>
 				<table>
 					<tr><td>Login </td><td><input type="text" name="username" value="" autocapitalize="none" autocorrect="off" /></td></tr>
 					<tr><td>Hasło </td><td><input type="password" name="password1" value="" autocapitalize="none" autocorrect="off" /></td></tr>
@@ -250,11 +244,14 @@ class Rower
 	//----read functions
 	//read data from file and fill arrays
 	private function createData($filename, $mode) {
-		if($this->database=='json'){
-			$this->createDataFromJson($filename, $mode);
+        if($this->database=='json'){
+			$this->createDataFromJson($this->data_path.'/'.$this->user.'/' . $filename . '.json', $mode);
 		}
 		else if($this->database=='sqlite'){
-			$this->createDataFromSqlite($filename, $mode);
+            if($filename=='inne' || $filename=='szlaki' || $filename=='serwis' || $filename=='best'){
+                $filename='gpx';
+            }
+            $this->createDataFromSqlite($this->data_path.'/'.$this->user.'/' . $filename . '.sqlite', $mode);
 		}
 		if($mode=='gpx'){
 			$this->sortTrips();
@@ -267,7 +264,7 @@ class Rower
 			$this->calculateSerwis();
 		}
 		else if($mode=='best'){
-				
+			
 		}
 	}
 	
@@ -282,14 +279,16 @@ class Rower
 					$this->trips[$date]['date']=$date;
 					$this->trips[$date]['desc']=$stats['desc'];
 					$this->trips[$date]['dist']=sprintf("%.2f", $stats['dist']);
-					$this->trips[$date]['map']=$date.'.png';
 					$time=explode(':', $stats['time']);
-					if($this->tryb=='szlaki'){
+                    if($this->tryb=='szlaki'){
+                        $this->trips[$date]['map']=$desc.'.png';
 						$this->trips[$date]['seconds']=floor($stats['dist']/18*3600);
 					}
-					else{
+                    else{
+                        $this->trips[$date]['map']=$date.'.png';
 						$this->trips[$date]['seconds']=$time[0]*60+$time[1];
-					}
+                    }
+                    $this->trips[$date]['map']=removePolish($this->trips[$date]['map']);
 					$this->trips[$date]['avg']=sprintf("%.2f", round($this->trips[$date]['dist']/$this->trips[$date]['seconds']*3600, 2));
 					$hours=(int)($this->trips[$date]['seconds']/3600);
 					$minutes=(int)(($this->trips[$date]['seconds']-$hours*3600)/60);
@@ -320,6 +319,86 @@ class Rower
 					$this->best['trips'][$this->file][$distance]['max_start']=$best['max_start'];
 					$this->best['trips'][$this->file][$distance]['max_end']=$best['max_end'];
 				}
+				break;
+		}
+	}
+
+	//read sqlite data
+	private function createDataFromSqlite($filename, $mode){
+		switch($mode){
+            case 'gpx':
+                $id=array_search($this->tryb, $this->ids);
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM tracks WHERE type=:id';
+                $q=$db->prepare($sql);
+                $q->execute(array(':id'=>$id));
+				while($r=$q->fetch(PDO::FETCH_ASSOC)){
+					$date=$r['date'];
+                    if($this->tryb=='szlaki'){
+                        $date=sizeof($this->trips);
+                    }
+					$this->trips[$date]['date']=$r['date'];
+					$this->trips[$date]['desc']=$r['title'];
+                    $this->trips[$date]['dist']=sprintf("%.2f", $r['distance']);
+                    $this->trips[$date]['seconds']=$r['time'];
+                    if($this->tryb=='szlaki'){
+                        $this->trips[$date]['map']=$r['title'].'.png';
+                        $this->trips[$date]['seconds']=floor($r['distance']/18*3600);
+                    }
+                    else {
+                        $this->trips[$date]['map']=$date.'.png';
+                    }
+                    $this->trips[$date]['map']=removePolish($this->trips[$date]['map']);
+					$this->trips[$date]['avg']=sprintf("%.2f", round($this->trips[$date]['dist']/$this->trips[$date]['seconds']*3600, 2));
+					$hours=(int)($this->trips[$date]['seconds']/3600);
+					$minutes=(int)(($this->trips[$date]['seconds']-$hours*3600)/60);
+					$seconds=(int)($this->trips[$date]['seconds']-$hours*3600-$minutes*60);
+					$this->trips[$date]['time_readable']=$this->timeReadable($hours, $minutes, $seconds);
+				}
+                $db=NULL;
+				break;
+			case 'serwis':
+				$i=0;
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM serwis';
+                $q=$db->prepare($sql);
+                $q->execute(array());
+				while($r=$q->fetch(PDO::FETCH_ASSOC)){
+					$this->serwis[$i]['name']=$r['name'];
+					$this->serwis[$i]['dist']=$r['distance'];
+					$this->serwis[$i]['date']=$r['date'];
+					$i++;
+                }
+                $db=NULL;
+				break;
+			case 'best':
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM best';
+                $q=$db->prepare($sql);
+                $q->execute(array());
+                while($r=$q->fetch(PDO::FETCH_ASSOC)){
+					$this->best['max'][$r['distance']]['avg']=$r['avg'];
+					$this->best['max'][$r['distance']]['file']=$r['name'];
+					$this->best['max'][$r['distance']]['max_start']=$r['start'];
+					$this->best['max'][$r['distance']]['max_end']=$r['end'];
+                }
+                $db=NULL;
+				break;
+            case 'besttrip':
+                $distances2=array('00500', '01000', '02000', '05000', '10000', '15000', '20000', '50000');
+                $db=new PDO('sqlite:' . $filename);
+                foreach($distances2 as $distances3) {
+                    $table='best'.$distances3;
+                    $sql="SELECT * FROM $table WHERE name=:name";
+                    $q=$db->prepare($sql);
+                    $q->execute(array(':name'=>$this->file));
+                    while($r=$q->fetch(PDO::FETCH_ASSOC)){
+                        $this->best['trips'][$this->file][$distances3]['avg']=$r['avg'];
+                        $this->best['trips'][$this->file][$distances3]['max_start']=$r['start'];
+                        $this->best['trips'][$this->file][$distances3]['max_end']=$r['end'];
+                    }
+                }
+                $db=NULL;
 				break;
 		}
 	}
@@ -424,13 +503,22 @@ class Rower
 		}
 	}
 	
-	private function updateSerwis($data_path){
-			$this->createData($data_path.'/'.$this->user.'/serwis.json', 'serwis');
+	private function updateSerwis(){
+			$this->createData('serwis', 'serwis');
 			foreach($this->serwis as &$czesc) {
 				unset($czesc['driven']);
-				$czesc['date']=date('Ymd');
+				$czesc['date']=date('Ymd'); 
 			}
-			file_put_contents($data_path.'/'.$this->user.'/serwis.json', json_encode($this->serwis, JSON_PRETTY_PRINT));
+            if($this->database=='json'){
+                file_put_contents($this->data_path.'/'.$this->user.'/serwis.json', json_encode($this->serwis, JSON_PRETTY_PRINT));
+            }
+            else if($this->database=='sqlite'){
+                $db=new PDO('sqlite:' . $this->data_path.'/'.$this->user.'/gpx.sqlite');
+                $sql='UPDATE serwis SET date=:date';
+                $q=$db->prepare($sql);
+                $q->execute(array(':date'=>date(Ymd)));
+                $db=NULL;
+            }
 	}
 
 	public function run() {
@@ -439,8 +527,7 @@ class Rower
 			$this->printNotAuthenticated();
 		}
 		else if($this->auth) {
-			$data_path='users';
-			$this->user=$_SESSION["username"];
+			$this->user=$_SESSION['username'];
 			$this->tryb=checkTryb();
 			$this->checkMode();
 			
@@ -448,16 +535,15 @@ class Rower
 			
 			if($this->mode=='all'){
 				//read data
-				$this->createData($data_path.'/'.$this->user.'/' .$this->tryb.'.json', "gpx");
+				$this->createData($this->tryb, 'gpx');
 			
 				if(isset($_POST['serwis']) && $_POST['serwis']=='serwis'){
-					$this->updateSerwis($data_path);
+					$this->updateSerwis();
 				}
 			
-				$this->createData($data_path.'/'.$this->user.'/serwis.json', 'serwis');
-				$this->createData($data_path.'/'.$this->user.'/best.json', 'best');
-			
-				if($this->tryb=='gpx'){
+                if($this->tryb=='gpx'){
+                    $this->createData('serwis', 'serwis');
+                    $this->createData('best', 'best');
 					$this->printStats();
 					$this->printSerwis();
 					$this->printBest($this->best['max']);
@@ -467,13 +553,13 @@ class Rower
 				$this->printTrips();
 			}
 			else if($this->mode=='trip'){	
-				//read data
-				$this->createData($data_path.'/'.$this->user.'/' .$this->tryb.'.json', 'gpx');
+                //read data
+                $this->createData($this->tryb, 'gpx');
 				$this->checkFile();
 				if($this->file!=-1){
 					$this->printTrip($this->trips[$this->file], $this->file, 640, 320);
 					if($this->tryb=='gpx'){
-						$this->createData($data_path.'/'.$this->user.'/best.json', 'besttrip');
+						$this->createData('best', 'besttrip');
 						$this->printBest($this->best['trips'][$this->file]);
 					}
 				}
@@ -500,14 +586,22 @@ class Process {
 	private $time=0;
 	private $stats=array();
 	private $enc;
-	
+    
+    private $data_path='users';
+    private $database='sqlite';
+    private $ids=array(1=>'gpx', 2=>'szlaki', 3=>'inne');
+    
 	function __construct($key) {
 		$this->key=$key;
 	}
 	
 	public function setAuth($auth) {
 		$this->auth=$auth;
-	}
+    }
+    
+    public function setDatabase($database) {
+        $this->database=$database;
+    }
 	
 	private function haversineDistance($curLat, $curLon, $prevLat, $prevLon) {
 		$earthMeanRadius=6371000;
@@ -640,20 +734,216 @@ class Process {
 		}
 		return implode('',$num);
 	}
-	
+    //----read functions
+    //read data from file and fill arrays
+    private function createData($filename, $mode) {
+        if($this->database=='json'){
+            $this->createDataFromJson($this->data_path.'/'.$this->user.'/' . $filename . '.json', $mode);
+        }
+        else if($this->database=='sqlite'){
+            if($filename=='inne' || $filename=='szlaki' || $filename=='serwis' || $filename=='best'){
+                $filename='gpx';
+            }
+            $this->createDataFromSqlite($this->data_path.'/'.$this->user.'/' . $filename . '.sqlite', $mode);
+        }
+        if($mode=='gpx'){
+            $this->sortTrips();
+            if($this->tryb!='szlaki') {
+                $this->createStats();
+                $this->createCalendar();
+            }
+        }
+        else if($mode=='serwis'){
+            $this->calculateSerwis();
+        }
+        else if($mode=='best'){
+            
+        }
+    }
+    
+    //read json data
+    private function createDataFromJson($filename, $mode){
+        $file=file_get_contents($filename);
+        $json=json_decode($file, true);
+        switch($mode){
+            case 'gpx':
+                $this->trips=array();
+                foreach($json as $date=>$stats) {
+                    $this->trips[$date]['date']=$date;
+                    $this->trips[$date]['desc']=$stats['desc'];
+                    $this->trips[$date]['dist']=sprintf("%.2f", $stats['dist']);
+                    $this->trips[$date]['map']=$date.'.png';
+                    $time=explode(':', $stats['time']);
+                    if($this->tryb=='szlaki'){
+                        $this->trips[$date]['seconds']=floor($stats['dist']/18*3600);
+                    }
+                    else{
+                        $this->trips[$date]['seconds']=$time[0]*60+$time[1];
+                    }
+                    $this->trips[$date]['avg']=sprintf("%.2f", round($this->trips[$date]['dist']/$this->trips[$date]['seconds']*3600, 2));
+                    $hours=(int)($this->trips[$date]['seconds']/3600);
+                    $minutes=(int)(($this->trips[$date]['seconds']-$hours*3600)/60);
+                    $seconds=(int)($this->trips[$date]['seconds']-$hours*3600-$minutes*60);
+                    $this->trips[$date]['time_readable']=$this->timeReadable($hours, $minutes, $seconds);
+                }
+                break;
+            case 'serwis':
+                $i=0;
+                foreach($json as $czesc) {
+                    $this->serwis[$i]['name']=$czesc['name'];
+                    $this->serwis[$i]['dist']=$czesc['dist'];
+                    $this->serwis[$i]['date']=$czesc['date'];
+                    $i++;
+                }
+                break;
+            case 'best':
+                foreach($json['max'] as $distance=>$best) {
+                    $this->best['max'][$distance]['avg']=$best['avg'];
+                    $this->best['max'][$distance]['file']=$best['file'];
+                    $this->best['max'][$distance]['max_start']=$best['max_start'];
+                    $this->best['max'][$distance]['max_end']=$best['max_end'];
+                }
+                break;
+            case 'besttrip':
+                foreach($json['trips'][$this->file] as $distance=>$best) {
+                    $this->best['trips'][$this->file][$distance]['avg']=$best['avg'];
+                    $this->best['trips'][$this->file][$distance]['max_start']=$best['max_start'];
+                    $this->best['trips'][$this->file][$distance]['max_end']=$best['max_end'];
+                }
+                break;
+        }
+    }
+    
+    //read sqlite data
+    private function createDataFromSqlite($filename, $mode){
+        switch($mode){
+            case 'gpx':
+                $id=array_search($this->tryb, $this->ids);
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM tracks WHERE type=:id';
+                $q=$db->prepare($sql);
+                $q->execute(array(':id'=>$id));
+                while($r=$q->fetch(PDO::FETCH_ASSOC)){
+                    $date=$r['date'];
+                    if($this->tryb=='szlaki'){
+                        $date=sizeof($this->trips);
+                    }
+                    $this->trips[$date]['date']=$r['date'];
+                    $this->trips[$date]['desc']=$r['title'];
+                    $this->trips[$date]['dist']=sprintf("%.2f", $r['distance']);
+                    if($this->tryb=='szlaki'){
+                        $this->trips[$date]['map']=$r['title'].'.png';
+                    }
+                    else {
+                        $this->trips[$date]['map']=$date.'.png';
+                    }
+                    $this->trips[$date]['seconds']=$r['time'];
+                    $this->trips[$date]['avg']=sprintf("%.2f", round($this->trips[$date]['dist']/$this->trips[$date]['seconds']*3600, 2));
+                    $hours=(int)($this->trips[$date]['seconds']/3600);
+                    $minutes=(int)(($this->trips[$date]['seconds']-$hours*3600)/60);
+                    $seconds=(int)($this->trips[$date]['seconds']-$hours*3600-$minutes*60);
+                    $this->trips[$date]['time_readable']=$this->timeReadable($hours, $minutes, $seconds);
+                }
+                $db=NULL;
+                break;
+            case 'serwis':
+                $i=0;
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM serwis';
+                $q=$db->prepare($sql);
+                $q->execute(array());
+                while($r=$q->fetch(PDO::FETCH_ASSOC)){
+                    $this->serwis[$i]['name']=$r['name'];
+                    $this->serwis[$i]['dist']=$r['distance'];
+                    $this->serwis[$i]['date']=$r['date'];
+                    $i++;
+                }
+                $db=NULL;
+                break;
+            case 'best':
+                $db=new PDO('sqlite:' . $filename);
+                $sql='SELECT * FROM best';
+                $q=$db->prepare($sql);
+                $q->execute(array());
+                while($r=$q->fetch(PDO::FETCH_ASSOC)){
+                    $this->best['max'][$r['distance']]['avg']=$r['avg'];
+                    $this->best['max'][$r['distance']]['file']=$r['name'];
+                    $this->best['max'][$r['distance']]['max_start']=$r['start'];
+                    $this->best['max'][$r['distance']]['max_end']=$r['end'];
+                }
+                $db=NULL;
+                break;
+            case 'besttrip':
+                $distances2=array('00500', '01000', '02000', '05000', '10000', '15000', '20000', '50000');
+                $db=new PDO('sqlite:' . $filename);
+                foreach($distances2 as $distances3) {
+                    $table='best'.$distances3;
+                    $sql="SELECT * FROM $table WHERE name=:name";
+                    $q=$db->prepare($sql);
+                    $q->execute(array(':name'=>$this->file));
+                    while($r=$q->fetch(PDO::FETCH_ASSOC)){
+                        $this->best['trips'][$this->file][$distances3]['avg']=$r['avg'];
+                        $this->best['trips'][$this->file][$distances3]['max_start']=$r['start'];
+                        $this->best['trips'][$this->file][$distances3]['max_end']=$r['end'];
+                    }
+                }
+                $db=NULL;
+                break;
+        }
+    }
+    
 	private function checkAllBest($path){
 		$distances=array(500, 1000, 2000, 5000, 10000, 15000, 20000, 50000);
-		$text=file_get_contents($path);
-		$best=json_decode($text, true);
+        
+        
+        if($this->database=='json'){
+            $text=file_get_contents($path);
+            $this->best=json_decode($text, true);
+        }
+        else if($this->database=='sqlite'){
+            $this->createData('best', 'best');
+        }
+        
 		foreach($distances as $distance1){
-			$this->checkBest($this->stats, $best, str_replace(".gpx", "", $this->filename), $distance1);
+            $name=str_replace('.gpx', '', $this->filename);
+			$newbest=$this->checkBest($this->stats, $name, $distance1);
+            
+            if($this->database=='json'){
+                $this->best['trips'][$name][$distance1]=array();
+                $this->best['trips'][$name][$distance1]['avg']=$newbest['maxavg'];
+                $this->best['trips'][$name][$distance1]['max_start']=$newbest['max_start'];
+                $this->best['trips'][$name][$distance1]['max_end']=$newbest['max_end'];
+                file_put_contents($path, json_encode($this->best, JSON_PRETTY_PRINT));
+            }
+            else if($this->database=='sqlite'){
+                $table='best'.sprintf("%05d",$distance1);
+                $db=new PDO('sqlite:' . $this->data_path.'/'.$this->user.'/' . 'gpx' . '.sqlite');
+                $sql="INSERT INTO $table (name, avg, start, end) VALUES (:name, :avg, :start, :end)";
+                $q=$db->prepare($sql);
+                $q->execute(array(':name'=>$name,':avg'=>$newbest['avg'], ':start'=>$newbest['max_start'], ':end'=>$newbest['max_end']));
+                $db=NULL;
+            }
+            if($newbest['avg']>$this->best['max'][$distance1]['avg']){
+                if($this->database=='json'){
+                    $this->best['max'][$distance1]['avg']=$newbest['avg'];
+                    $this->best['max'][$distance1]['file']=$name;
+                    $this->best['max'][$distance1]['max_start']=$newbest['max_start'];
+                    $this->best['max'][$distance1]['max_end']=$newbest['max_end'];
+                    file_put_contents($path, json_encode($this->best, JSON_PRETTY_PRINT));
+                }
+                else if($this->database=='sqlite'){
+                    $db=new PDO('sqlite:' . $this->data_path.'/'.$this->user.'/' . 'gpx' . '.sqlite');
+                    $sql='UPDATE best SET name=:name, avg=:avg, start=:start, end=:end WHERE distance=:distance';
+                    $q=$db->prepare($sql);
+                    $q->execute(array(':name'=>$name,':avg'=>$newbest['avg'], ':start'=>$newbest['max_start'], ':end'=>$newbest['max_end'], ':distance'=>$distance1));
+                    $db=NULL;
+                }
+            }
 		}
-		
-		file_put_contents($path, json_encode($best, JSON_PRETTY_PRINT));
 	}
 	
 	//check for best average speed
-	private function checkBest($stats, &$best, $name, $whichdistance){
+	private function checkBest($stats, $name, $whichdistance){
 		$maxavg=-1;
 		$i_max=sizeof($stats);
 		$i=0;
@@ -685,26 +975,19 @@ class Process {
 			}
 			$i++;
 		}
-		if($maxavg>$best['max'][$whichdistance]['avg']){
-			$best['max'][$whichdistance]['avg']=$maxavg;
-			$best['max'][$whichdistance]['file']=$name;
-			$best['max'][$whichdistance]['max_start']=$max_start;
-			$best['max'][$whichdistance]['max_end']=$max_end;
-		}
-		if($maxavg>-1){
-			if(!isset($best['trips'][$name])) $best['trips'][$name]=array();
-			$best['trips'][$name][$whichdistance]=array();
-			$best['trips'][$name][$whichdistance]['avg']=$maxavg;
-			$best['trips'][$name][$whichdistance]['max_start']=$max_start;
-			$best['trips'][$name][$whichdistance]['max_end']=$max_end;
-		}
-		else{
-			if(!isset($best['trips'][$name])) $best['trips'][$name]=array();
-			$best['trips'][$name][$whichdistance]=array();
-			$best['trips'][$name][$whichdistance]['avg']=-1;
-			$best['trips'][$name][$whichdistance]['max_start']=0;
-			$best['trips'][$name][$whichdistance]['max_end']=0;
-		}
+        
+        $newbest=array();
+        if($maxavg>-1){
+            $newbest['avg']=$maxavg;
+            $newbest['max_start']=$max_start;
+            $newbest['max_end']=$max_end;
+        }
+        else{
+            $newbest['avg']=-1;
+            $newbest['max_start']=0;
+            $newbest['max_end']=0;
+        }
+        return $newbest;
 	}
 	
 	private function setFilename(){
@@ -780,8 +1063,17 @@ class Process {
 		$this->distance=round($this->distance/1000, 2);
 	}
 	
-	private function pushNewTripToJson($path){
-		$text=file_get_contents($path);
+    private function addNewTrip($filename){
+        if($this->database=='json'){
+            $this->pushNewTripToJson($this->tryb);
+        }
+        else if($this->database=='sqlite'){
+            $this->pushNewTripToSqlite($this->tryb);
+        }
+    }
+    
+	private function pushNewTripToJson($filename){
+		$text=file_get_contents($this->data_path.'/'.$this->user.'/' . $filename . '.json');
 		$json=json_decode($text, true);
 		
 		//create new trip
@@ -794,14 +1086,39 @@ class Process {
 		else {
 			$new_trip['time']=0;
 		}
-		$new_trip['tags']='';
 		
 		//push to json
 		$json[str_replace('.gpx', '', $this->filename)]=$new_trip;
 		
 		//write data
-		file_put_contents($path, json_encode($json, JSON_PRETTY_PRINT));
-	}
+		file_put_contents($this->data_path.'/'.$this->user.'/' . $filename . '.json', json_encode($json, JSON_PRETTY_PRINT));
+    }
+    
+    private function pushNewTripToSqlite($filename){
+        if($filename=='inne' || $filename=='szlaki'){
+            $filename='gpx';
+        }
+        
+        //create new trip
+        $new_trip=array();
+        $new_trip['type']=array_search($this->tryb, $this->ids);
+        $new_trip['title']=$this->desc;
+        $new_trip['distance']=$this->distance;
+        if($this->tryb!='szlaki') {
+            $new_trip['time']=$this->time;
+            $new_trip['date']=str_replace('.gpx', '', $this->filename);
+        }
+        else {
+            $new_trip['time']=-1;
+            $new_trip['date']=-1;
+        }
+        
+        $db=new PDO('sqlite:' . $this->data_path.'/'.$this->user.'/' . $filename . '.sqlite');
+        $sql='INSERT INTO tracks (type, date, title, distance, time) VALUES (:type, :date, :title, :distance, :time)';
+        $q=$db->prepare($sql);
+        $q->execute(array(':type'=>$new_trip['type'], ':date'=>$new_trip['date'], ':title'=>$new_trip['title'], ':distance'=>$new_trip['distance'], ':time'=>$new_trip['time']));
+        $db=NULL;
+    }
 	
 	private function createMaps($key, $path){
 		$this->encodePolyline();
@@ -810,7 +1127,7 @@ class Process {
 		$url.=$this->enc;
 		$urlmini="http://maps.googleapis.com/maps/api/staticmap?key=".$key."&sensor=false&size=250x125&path=weight:3|color:rend|enc:";
 		$urlmini.=$this->enc;
-		$imagename=str_replace('.gpx', '.png', $this->filename);
+		$imagename=removePolish(str_replace('.gpx', '.png', $this->filename));
 		$img = $path . '/' . $imagename;
 		$imgmini = $path . '/mini-' . $imagename;
 		file_put_contents($img, file_get_contents($url));
@@ -861,12 +1178,11 @@ class Process {
 					<tr><td>Hasło </td><td><input type="password" name="password1" value="" /></td></tr>
 					<tr><td>Hasło (powtórz) </td><td><input type="password" name="password2" value="" /></td></tr>
 				</table>
-				<input type="button" value="Zarejestruj" onclick="User.processRegistration()"/>
+				<input type="button" value="Zarejestruj"/>
 			</form>
 			</div>
-			<div id="login"><form id="formlogin" class="controlbox" name="log in" action="gpx.php" onsubmit="User.processLogin(); return false" method="post">
+			<div id="login"><form id="formlogin" class="controlbox" name="log in" action="gpx.php" method="post">
 				<input type="hidden" name="op" value="login"/>
-				<input type="hidden" name="sha1" value=""/>
 				<table>
 					<tr><td>Login </td><td><input type="text" name="username" value="" autocapitalize="none" autocorrect="off" /></td></tr>
 					<tr><td>Hasło </td><td><input type="password" name="password1" value="" autocapitalize="none" autocorrect="off" /></td></tr>
@@ -909,13 +1225,12 @@ class Process {
 			$this->printNotAuthenticated();
 		}
 		else if($this->auth) {
-			$data_path='users';
 			$this->user=$_SESSION["username"];
 
 			$this->tryb=checkTryb();
 
 			$this->setFilename();
-			$this->file=$data_path . '/' . $this->user . '/' . $this->tryb . '/' . $this->filename;
+			$this->file=$this->data_path . '/' . $this->user . '/' . $this->tryb . '/' . $this->filename;
 			$this->moveFile();
 
 			if($this->status){
@@ -929,14 +1244,15 @@ class Process {
 				
 				$this->gpx=simplexml_load_file($this->file);
 				$this->calculateDistanceAndTime();
-				$this->pushNewTripToJson($data_path . '/' . $this->user . '/' . $this->tryb . '.json');
-
+                
+                $this->addNewTrip($this->tryb);
+                
 				//check for best averages
 				if($this->tryb=="gpx"){
-					$this->checkAllBest($data_path . '/' . $this->user . '/best.json');
+					$this->checkAllBest($this->data_path . '/' . $this->user . '/best.json');
 				}
 
-				$this->createMaps($this->key, $data_path . '/' . $this->user . '/maps/' . $this->tryb);
+				$this->createMaps($this->key, $this->data_path . '/' . $this->user . '/maps/' . $this->tryb);
 			}
 		}
 	$this->printHTML();
@@ -965,5 +1281,11 @@ function checkTryb() {
 	else {
 		return 'gpx';
 	}
+}
+
+function removePolish($string) {
+    $pl = array('Ę','ę','Ó','ó','Ł','ł','Ś','ś','Ą','ą','Ż','ż','Ź','ź','Ć','ć','Ń','ń', ' ');
+    $nopl  = array('e','e','o','o','l','l','s','s','a','a','z','z','z','z','c','c','n','n', '');
+    return str_replace($pl, $nopl, $string);
 }
 ?>

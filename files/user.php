@@ -219,7 +219,7 @@
 		{
 			// get relevant values
 			$username = $_POST["username"];
-			$sha1 = $_POST["sha1"];
+			$sha1 = sha1($_POST["password1"]);
 			// step 1: someone could have bypassed the javascript validation, so validate again.
 			if(!$this->validate_user_name($username)) {
 				$this->info("log in error: user name did not pass validation");

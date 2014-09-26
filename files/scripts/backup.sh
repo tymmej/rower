@@ -55,10 +55,10 @@ fi
 enabled=(1 1)
 
 spaths=("$username@$address:/www/rower/users"
-	"/home/tymmej/documents/documents/Programowanie/rower/files/"
+	"/Users/tymmej/Documents/Programowanie/rower/files/"
 )
 
-dpaths=("/home/tymmej/documents/documents/Programowanie/rower/files"
+dpaths=("/Users/tymmej/Documents/Programowanie/rower/files"
 	"$username@$address:/www/rower/"
 )
 
