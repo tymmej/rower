@@ -6,8 +6,8 @@ $USER = new User('registration_callback');
 
 require_once('functions.php');
 
-$obj=new Process($key);
+$obj=new Rower($key);
 $obj->setAuth($USER->authenticated);
-$obj->run();
+$obj->run('process');
 
 ?>
