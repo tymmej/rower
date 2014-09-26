@@ -1,4 +1,6 @@
 /screenshots/
+/files/key.php
+/files/users/
+
 .DS_Store
 *.sublime-workspace
-
