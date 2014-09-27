@@ -13,7 +13,7 @@ class Rower
 	private $filename;
 	private $ids=array(1=>'gpx', 2=>'szlaki', 3=>'inne');
 	private $distances=array(500, 1000, 2000, 5000, 10000, 15000, 20000, 50000);
-	private $modes=array('all', 'trips');
+	private $modes=array('all', 'trip');
 
 	//for rower
 	private $trips=array();
@@ -523,7 +523,7 @@ class Rower
 	
 	//check which data we display, single trip or all
 	private function checkMode() {
-		if(in_array($_GET['tryb'], $this->modes)){
+		if(in_array($_GET['mode'], $this->modes)){
 			$this->mode=$_GET['mode'];
 		}
 		else{
