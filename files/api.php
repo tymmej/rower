@@ -128,6 +128,17 @@ class MyAPI extends API
 		}
 	 }
 
+	 protected function username () {
+		if ($this->method == 'GET') {
+			if($this->user->authenticated){
+				return $this->user->username;
+			}
+		}
+		else {
+			return "Only accepts GET requests";
+		}
+	 }
+
 	 protected function tracks() {
 	 	if ($this->method == 'GET') {
 			if(sizeof($this->args)==3){
