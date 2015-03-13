@@ -534,7 +534,7 @@ class Rower
 	
 	//check which data we display, single trip or all
 	private function checkMode() {
-		if(in_array($_GET['mode'], $this->modes)){
+		if(isset($_GET['mode']) && in_array($_GET['mode'], $this->modes)){
 			$this->mode=$_GET['mode'];
 		}
 		else{
