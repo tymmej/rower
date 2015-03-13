@@ -20,7 +20,8 @@ class Rower
 	private $serwis=array();
 	private $best=array();
 	private $calendar=array();
-	
+	private $howManyTrips=-1;
+
 	//for process
 	private $desc;
 	private $gpx;
@@ -49,10 +50,15 @@ class Rower
 	//----print functions
 
 	//print all trips
-	private function printTrips() {
+	private function printTrips($howMany) {
+		$counter=1;
 		echo '<div class="grid">';
 		foreach($this->trips as $date=>$trip) {
 			$this->printTrip($trip, $date, 250, 125);
+			$counter++;
+			if($counter>$this->howManyTrips && $this->howManyTrips != -1){
+				break;
+			}
 		}
 		echo '</div>';
 	}
@@ -289,6 +295,11 @@ class Rower
 		}
 	}
 	
+	private function printTripsLink($howMany){
+		echo '<div id="all">
+				<a href="?trips=' . $howMany . '&tryb="' . $this->tryb . '">Mniej/Więcej</a>
+				</div>';
+	}
 	//----end print functions
 	
 	//----read functions
@@ -523,11 +534,29 @@ class Rower
 	
 	//check which data we display, single trip or all
 	private function checkMode() {
-		if(in_array($_GET['mode'], $this->modes)){
+		if(isset($_GET['mode']) && in_array($_GET['mode'], $this->modes)){
 			$this->mode=$_GET['mode'];
 		}
 		else{
 			$this->mode='all';
+		}
+	}
+
+	//check how many trips
+	private function checkHowManyTrips() {
+		if(isset($_GET['trips'])){
+			if(preg_match("/^-?[1-9][0-9]*$/D", $_GET['trips'])){
+				$this->howManyTrips=$_GET['trips'];
+			}
+			else if($_GET['trips']=="all"){
+				$this->howManyTrips=-1;
+			}
+			else{
+				$this->howManyTrips=4;
+			}
+		}
+		else{
+			$this->howManyTrips=4;
 		}
 	}
 
@@ -982,7 +1011,8 @@ class Rower
 				$this->user=$_SESSION['username'];
 				$this->tryb=checkTryb();
 				$this->checkMode();
-				
+				$this->checkHowManyTrips();
+
 				$this->printHeader();
 				
 				if($this->mode=='all'){
@@ -992,17 +1022,22 @@ class Rower
 					if(isset($_POST['serwis']) && $_POST['serwis']=='serwis'){
 						$this->updateSerwis();
 					}
-				
+					if($this->howManyTrips<=4 && $this->howManyTrips>=0){
+						$this->printTrips($this->howManyTrips);
+						$this->printTripsLink(-1);
+					}
 					if($this->tryb=='gpx'){
 						$this->createData('serwis', 'serwis');
 						$this->createData('best', 'best');
+						$this->printCalendar();
 						$this->printStats();
 						$this->printSerwis();
 						$this->printBest($this->best['max']);
-						$this->printCalendar();
 					}
-				
-					$this->printTrips();
+					if($this->howManyTrips>4 || $this->howManyTrips==-1){
+						$this->printTripsLink(4);
+						$this->printTrips($this->howManyTrips);
+					}
 				}
 				else if($this->mode=='trip'){	
 					//read data
