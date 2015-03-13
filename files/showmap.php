@@ -71,12 +71,33 @@ if($USER->authenticated) {
 			<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=' . $key . '&amp;sensor=false"></script>
 			<script type="text/javascript" src="js/loadgpx.js"></script>
 			<script type="text/javascript">
-				function loadGPXFileIntoGoogleMap(map, filename) {
+				function rainbow(numOfSteps, step) {
+				    // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
+				    // Adam Cole, 2011-Sept-14
+				    // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+				    var r, g, b;
+				    var h = step / numOfSteps;
+				    var i = ~~(h * 6);
+				    var f = h * 6 - i;
+				    var q = 1 - f;
+				    switch(i % 6){
+				        case 0: r = 1, g = f, b = 0; break;
+				        case 1: r = q, g = 1, b = 0; break;
+				        case 2: r = 0, g = 1, b = f; break;
+				        case 3: r = 0, g = q, b = 1; break;
+				        case 4: r = f, g = 0, b = 1; break;
+				        case 5: r = 1, g = 0, b = q; break;
+				    }
+				    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+				    return (c);
+				}
+				function loadGPXFileIntoGoogleMap(map, filename, numOfSteps, step) {
 					$.ajax({url: filename,
 						dataType: "xml",
 						success: function(data) {
 						  var parser = new GPXParser(data, map);
-						  parser.setTrackColour("#ff0000"); // Set the track line colour
+						  parser.setTrackColour(rainbow(numOfSteps, step)); // Set the track line colour
+						  parser.setOpacity(0.75);
 						  parser.setTrackWidth(5); // Set the track line width
 						  parser.setMinTrackPointDelta(0.0001); // Set the minimum distance between track points
 						  parser.centerAndZoom(data);
@@ -96,10 +117,11 @@ if($USER->authenticated) {
 						zoom: 8,
 						mapTypeId: google.maps.MapTypeId.HYBRID
 					};
-					var map = new google.maps.Map(document.getElementById("map"),
-						mapOptions);';
+					var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+					';
 		if(!$multi) {
-			echo 'loadGPXFileIntoGoogleMap(map,  "download.php?tryb=' . $tryb . '&filename=" + params.file + ".gpx");';
+			echo 'loadGPXFileIntoGoogleMap(map,  "download.php?tryb=' . $tryb . '&filename=" + params.file + ".gpx", 1, 0);';
+			echo "\n";
 			echo 'document.title = "Mapka Google " + params.file;';
 		}
 		else{
@@ -113,9 +135,18 @@ if($USER->authenticated) {
 				$end=date('Ymd');
 			}
 			$lenend=strlen($end);
+			$numOfSteps=0;
+			$step=0;
 			foreach ($files as $key => $value) {
 				if (substr($value, 0, $lenstart) >= $start && substr($value, 0, $lenend) <= $end) {
-					echo 'loadGPXFileIntoGoogleMap(map, "download.php?tryb=' . $tryb . '&filename=' . $value . '");';
+					$numOfSteps++;
+				}
+			}
+			foreach ($files as $key => $value) {
+				if (substr($value, 0, $lenstart) >= $start && substr($value, 0, $lenend) <= $end) {
+					echo 'loadGPXFileIntoGoogleMap(map, "download.php?tryb=' . $tryb . '&filename=' . $value . '", ' . $numOfSteps . ', ' . $step . ');';
+					echo "\n";
+					$step++;
 				}
 			}
 			echo 'document.title = "Mapka Google ' .  $start . ' - ' . $end .'"';

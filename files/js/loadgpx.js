@@ -52,12 +52,17 @@ function GPXParser(xmlDoc, map) {
     this.map = map;
     this.trackcolour = "#ff00ff"; // red
     this.trackwidth = 5;
-    this.mintrackpointdelta = 0.0001
+    this.mintrackpointdelta = 0.0001;
+    this.opacity=0.5
 }
 
 // Set the colour of the track line segements.
 GPXParser.prototype.setTrackColour = function(colour) {
     this.trackcolour = colour;
+}
+
+GPXParser.prototype.setOpacity = function(opacity) {
+    this.opacity = opacity;
 }
 
 // Set the width of the track line segements
@@ -131,7 +136,7 @@ GPXParser.prototype.createMarker = function(point) {
 }
 
 GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
-        width) {
+        width, opacity) {
     var trackpoints = trackSegment.getElementsByTagName("trkpt");
     if(trackpoints.length == 0) {
         return;
@@ -161,20 +166,30 @@ GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
         }
 
     }
-
+    var lineSymbol = {
+        path: 'M 0,-1 0,1',
+        strokeOpacity: opacity,
+        scale: 4
+    };
     var polyline = new google.maps.Polyline({
         path: pointarray,
         strokeColor: colour,
         strokeWeight: width,
+        strokeOpacity: 0.25,
+        icons: [{
+            icon: lineSymbol,
+            offset: '0',
+            repeat: '20px'
+        }],
         map: this.map
     });
 }
 
-GPXParser.prototype.addTrackToMap = function(track, colour, width) {
+GPXParser.prototype.addTrackToMap = function(track, colour, width, opacity) {
     var segments = track.getElementsByTagName("trkseg");
     for(var i = 0; i < segments.length; i++) {
         var segmentlatlngbounds = this.addTrackSegmentToMap(segments[i], colour,
-                width);
+                width, opacity);
     }
 }
 
@@ -247,7 +262,7 @@ GPXParser.prototype.centerAndZoomToLatLngBounds = function(latlngboundsarray) {
 GPXParser.prototype.addTrackpointsToMap = function() {
     var tracks = this.xmlDoc.documentElement.getElementsByTagName("trk");
     for(var i = 0; i < tracks.length; i++) {
-        this.addTrackToMap(tracks[i], this.trackcolour, this.trackwidth);
+        this.addTrackToMap(tracks[i], this.trackcolour, this.trackwidth, this.opacity);
     }
 }
 
