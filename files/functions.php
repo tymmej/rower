@@ -297,7 +297,7 @@ class Rower
 	
 	private function printTripsLink($howMany){
 		echo '<div id="all">
-				<a href="?trips=' . $howMany . '&tryb="' . $this->tryb . '">Mniej/Więcej</a>
+				<a href="?trips=' . $howMany . '&tryb=' . $this->tryb . '">Mniej/Więcej</a>
 				</div>';
 	}
 	//----end print functions
