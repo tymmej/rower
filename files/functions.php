@@ -825,7 +825,7 @@ class Rower
 	private function setFilename(){
 		if(isset($_FILES['gpx']['name'])){
 			$this->filename=basename($_FILES['gpx']['name']);
-			$this->desc=preg_replace("/[^A-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-\s]/u", "", $_POST['desc']);
+			$this->desc=preg_replace("/[^\sA-Za-z0-9ążśźęćńółĄŻŚŹĘĆŃÓŁ-]/u", "", $_POST['desc']);
 			//1-upload; 2-autoprocess
 			$this->mode=1;
 		}
